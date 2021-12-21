@@ -1,5 +1,5 @@
 /**
- * Node-JS Boilerplate
+ * Screnr Project
  * @author Yousuf Kalim
  */
 require("dotenv").config();
