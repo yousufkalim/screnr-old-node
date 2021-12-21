@@ -1,4 +1,4 @@
-# Node-JS Boilerplate
+# Screnr-Node
 
 Installation steps to run server locally
 
