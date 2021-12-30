@@ -26,7 +26,7 @@ exports.create = async (req, res) => {
       // Passwords not same
       return res.status(400).json({
         success: false,
-        message: "Password and Confirm Password are not same.",
+        message: "Password and Confirm Password are not the same.",
       });
     }
 
@@ -57,6 +57,32 @@ exports.getAll = async (req, res) => {
   try {
     const users = await Users.find(); // Finding all the users from db
     res.json({ success: true, users }); // Success
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+exports.getPatients = async (req, res) => {
+  try {
+    const patients = await Users.aggregate([
+      {
+        $match: {
+          role: "patient",
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          gender: 1,
+          email: 1,
+          phone: 1,
+          role: 1,
+        },
+      },
+    ]); // Finding all the users from db
+    res.json({ success: true, patients }); // Success
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);

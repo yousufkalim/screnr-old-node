@@ -11,10 +11,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    cnic: {
-      type: Number,
-      required: true,
-    },
     email: {
       type: String,
       required: true,
@@ -28,16 +24,16 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ["male", "female"],
+      enum: ["male", "female", "other"],
     },
     role: {
       type: String,
       required: true,
-      enum: ["admin", "user"],
-      default: "user",
+      enum: ["patient", "doctor"],
+      default: "patient",
     },
     photo: String,
-    number: String,
+    phone: String,
   },
   {
     timestamps: true,

@@ -31,6 +31,7 @@ router.post(
 
 // Read
 router.get("/", users.getAll); // Get all users at once
+router.get("/getPatients", users.getPatients); // Get all users at once
 router.get("/:userId", users.getById); // Get one user by it's id
 
 // Update
