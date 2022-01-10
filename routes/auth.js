@@ -20,7 +20,8 @@ const {
  */
 
 // Read
-router.post("/login", validateLogin, isValidated, auth.login); // Get all users at once
+router.post("/loginbytherapist", validateLogin, isValidated, auth.login); // Get all users at once
+router.post("/loginbypatient", validateLogin, isValidated, auth.loginbypatient);
 router.get("/", checkAuth, auth.confirmAuth);
 router.put(
   "/password/:userId",
@@ -29,6 +30,5 @@ router.put(
   auth.changePassword
 ); // Change password route
 router.put("/forgot/:email", auth.forgot);
-
 // Export
 module.exports = router;
