@@ -50,7 +50,6 @@ exports.validateUserUpdate = [
   check("gender", "Gender is required.").notEmpty(),
   check("phone", "Phone is required.").notEmpty().isNumeric().trim(),
 ];
-
 // Login validation
 exports.validateLogin = [
   check("email", "Email is required").notEmpty().isEmail().trim().toLowerCase(),
@@ -74,6 +73,13 @@ exports.changePasswordValidate = [
     .notEmpty()
     .trim()
     .isLength({ min: 8 }),
+];
+
+exports.validateAssessmentrequest=[
+  check("patient", "patientID is required.").notEmpty().trim(),
+  check("therapist", "TherapistID  is required.").notEmpty().trim(),
+  check("form_title","form_title is required").notEmpty().trim(),
+  check("form_description","form_description is required").notEmpty().trim(),
 ];
 
 /*

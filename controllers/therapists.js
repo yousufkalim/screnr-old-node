@@ -16,21 +16,21 @@ exports.create = async (req, res) => {
   try {
     let { email, password, confirmPassword } = req.body; // Getting required fields from body
     const existingUser = await Therapists.findOne({ email }); // Finding already existing user
-
+    const existingPatient=await Patients.findOne({ email });
     // Extra Validations
-    if (existingUser) {
+    if (existingUser || existingPatient) {
       // If we found existing user in db
       return res
         .status(409)
         .json({ success: false, message: "User already exists." });
-    } else if (password !== confirmPassword) {
+    }
+     else if (password !== confirmPassword) {
       // Passwords not same
       return res.status(400).json({
         success: false,
         message: "Password and Confirm Password are not the same.",
       });
     }
-
     // Getting url of the image
     if (req.file) {
       req.body.avatar = req.file.path; // Creating a new property called photo in body object
@@ -39,7 +39,6 @@ exports.create = async (req, res) => {
     // Creating User
     req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt)); // Hashing the password with salt 8
     const user = await Therapists.create(req.body); // Adding user in db
-
     // Done
     res.json({ success: true, user }); //Success
   } catch (err) {
@@ -48,7 +47,6 @@ exports.create = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
 /**
  * Get all users
  * @param {object} req
@@ -64,7 +62,6 @@ exports.getAll = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
 exports.getPatients = async (req, res) => {
   try {
     const patients = await Patients.find(); // Finding all the users from db

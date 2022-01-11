@@ -16,9 +16,9 @@
    try {
      let { email, password} = req.body; // Getting required fields from body
      const existingUser = await Patients.findOne({ email }); // Finding already existing user
- 
+     const existingTherapist = await Therapists.findOne({ email });
      // Extra Validations
-     if (existingUser) {
+     if (existingUser || existingTherapist) {
        // If we found existing user in db
        return res
          .status(409)
@@ -29,7 +29,6 @@
      if (req.file) {
        req.body.avatar = req.file.path; // Creating a new property called photo in body object
      }
- 
      // Creating User
      req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt)); // Hashing the password with salt 8
      req.body.role='patient'
