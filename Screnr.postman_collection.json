@@ -1,0 +1,359 @@
+{
+	"info": {
+		"_postman_id": "6df5404f-3412-4d19-a7bd-ae171eb1f30d",
+		"name": "Screnr",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tharapist",
+			"item": [
+				{
+					"name": "GET all therapists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/therapists",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"therapists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET All PATIENT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/patients/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get therapist by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/therapists/61dc024c89e2fe23c0c04238",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"therapists",
+								"61dc024c89e2fe23c0c04238"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update therapist",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"last_name\":\"haider\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/therapists/61dc14fdc0800a1024932a7a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"therapists",
+								"61dc14fdc0800a1024932a7a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Login by therapist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/auth/loginbytherapist",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								"loginbytherapist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patient login",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Auth",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxZGMwMjRjODllMmZlMjNjMGMwNDIzOCIsImZpcnN0X25hbWUiOiJzaHVqYSIsImxhc3RfbmFtZSI6Im5hcXZpIiwiZW1haWwiOiJzaHVqYW5hcXZpMjg4QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJFcxeTRPVFMwd0JkbmJSYjNNZ000UWUxUkF5cDF0S1NJM0FsUGNvVXJOdUtPbno2STVRZ0xhIiwiZ2VuZGVyIjoibWFsZSIsImRvYiI6IjE5OTktMTItMzBUMTk6MDA6MDAuMDAwWiIsInBob25lIjoiMDMxMjczNzg5NDUiLCJhZGRyZXNzIjoiSm9oYXIgdG93biBMYWhvcmUiLCJhdmF0YXIiOiJ1cGxvYWRzXFwxNjQxODA4NDU5NTg3LTZmYjg3NmM2YjE1YmQyNTIwYWRkNWY3MjBlZDIyOTJkICgxKS5qcGciLCJjcmVhdGVkQXQiOiIyMDIyLTAxLTEwVDA5OjU0OjIwLjU1OFoiLCJ1cGRhdGVkQXQiOiIyMDIyLTAxLTEwVDA5OjU0OjIwLjU1OFoiLCJfX3YiOjB9LCJpYXQiOjE2NDE4MDk5NzMsImV4cCI6MTY0MjE2OTk3M30.rQ1n-IAZmyI3kAeFDfAN7h1nhQBjTUxZfWoc51fUSy4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/auth/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "patients",
+			"item": [
+				{
+					"name": "Patient Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "first_name",
+									"value": "shuja",
+									"type": "default"
+								},
+								{
+									"key": "last_name",
+									"value": "naqvi",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "wahaj718@gmail.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "123456789",
+									"type": "default"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "123456789",
+									"type": "default"
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"type": "default"
+								},
+								{
+									"key": "patient_id",
+									"value": "12238378338934",
+									"type": "default"
+								},
+								{
+									"key": "dob",
+									"value": "1999/12/31",
+									"type": "default"
+								},
+								{
+									"key": "phone",
+									"value": "03127378945",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/hp/Downloads/6fb876c6b15bd2520add5f720ed2292d (1).jpg"
+								},
+								{
+									"key": "address",
+									"value": "Johar town Lahore",
+									"type": "default"
+								},
+								{
+									"key": "problem_name",
+									"value": "chest_pain",
+									"type": "default"
+								},
+								{
+									"key": "problem_description",
+									"value": "just a dumy description",
+									"type": "default"
+								},
+								{
+									"key": "national_id",
+									"value": "3420152145111",
+									"type": "default"
+								},
+								{
+									"key": "middle_name",
+									"value": "Haider",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/patients/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL THERAPISTS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/patients/getTherapists",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"getTherapists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get patient by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/patients/61dc1645c0800a1024932a82",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"61dc1645c0800a1024932a82"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update patients",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"first_name\":\"wahaj\",\"last_name\":\"haider\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/patients/61dc124cce97374ad499ef96",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"61dc124cce97374ad499ef96"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

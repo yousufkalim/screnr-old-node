@@ -29,6 +29,5 @@ router.put(
   auth.changePassword
 ); // Change password route
 router.put("/forgot/:email", auth.forgot);
-
 // Export
 module.exports = router;

@@ -3,11 +3,14 @@
  * @author Yousuf Kalim
  */
 const mongoose = require("mongoose");
-
 // Schema
-const userSchema = new mongoose.Schema(
+const TherapistsSchema = new mongoose.Schema(
   {
-    name: {
+    first_name: {
+      type: String,
+      required: true,
+    },
+    last_name: {
       type: String,
       required: true,
     },
@@ -26,13 +29,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["male", "female", "other"],
     },
-    role: {
+    role:{
       type: String,
-      required: true,
-      enum: ["patient", "doctor"],
-      default: "patient",
+      enum: ["therapist"],
+      default:'therapist'
     },
-    photo: String,
+    avatar: String,
+    dob: Date,
+    address: String,
+    doc_specailization: String,
     phone: String,
   },
   {
@@ -41,4 +46,4 @@ const userSchema = new mongoose.Schema(
 );
 
 // Model
-module.exports = mongoose.model("users", userSchema);
+module.exports = mongoose.model("therapists", TherapistsSchema);
