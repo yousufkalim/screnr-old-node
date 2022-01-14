@@ -1,15 +1,15 @@
 /**
  * User auth routes
- * @author Yousuf Kalim
+ * @codeBy Shuja Naqvi
  */
-const router = require("express").Router();
-const auth = require("../controllers/auth");
-const { checkAuth } = require("../middleware/checkAuth");
+const router = require("express").Router(); //Access to express router module
+const auth = require("../controllers/auth"); //Access to auth controller
+const { checkAuth } = require("../middleware/checkAuth"); //Middleware to check jwt in header
 const {
   validateLogin,
   isValidated,
   changePasswordValidate,
-} = require("../middleware/validators");
+} = require("../middleware/validators"); //validators to validate data coming from body
 
 /**
  * ////////////////////////// Routes /////////////////////////
@@ -20,14 +20,14 @@ const {
  */
 
 // Read
-router.post("/login", validateLogin, isValidated, auth.login); // Get all users at once
-router.get("/", checkAuth, auth.confirmAuth);
+router.post("/login", validateLogin, isValidated, auth.login); // Login of all  user
+router.get("/", checkAuth, auth.confirmAuth); //validate jwt in header
 router.put(
   "/password/:userId",
-  changePasswordValidate,
+  changePasswordValidate, //validating params
   isValidated,
-  auth.changePassword
-); // Change password route
-router.put("/forgot/:email", auth.forgot);
+  auth.changePassword // Change password route
+);
+router.put("/forgot/:email", auth.forgot); //forget password route
 // Export
 module.exports = router;

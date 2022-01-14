@@ -1,59 +1,67 @@
 /**
- * User schema
- * @author Yousuf Kalim
+ * Patient's Schema schema
+ * @author Shuja Naqvi
+ *
  */
- const mongoose = require("mongoose");
- // Schema
- const PatientsSchema = new mongoose.Schema(
-   {
-     first_name: {
-       type: String,
-       required: true,
-     },
-     middle_name: {
-        type: String,
-        required: true,
+const mongoose = require("mongoose");
+// Schema
+const PatientsSchema = new mongoose.Schema(
+  {
+    first_name: {
+      type: String,
+      required: true,
+    },
+    middle_name: {
+      type: String,
+      required: true,
+    },
+    last_name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "other"],
+    },
+    role: {
+      type: String,
+      enum: ["patient"],
+      default: "patient",
+    },
+    national_id: {
+      //This will store national_id od patient inorder to validate him in future
+      type: String,
+      required: true,
+    },
+    assessments: 
+      //This will store ids of all the assessments assigned to a patient
+      {
+        assessment: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Assessments",
+        },
       },
-     last_name: {
-       type: String,
-       required: true,
-     },
-     national_id:{
-        type: String,
-        required: true,
-     },
-     email: {
-       type: String,
-       required: true,
-       unique: true,
-       lowercase: true,
-     },
-     password: {
-       type: String,
-       required: true,
-       minlength: 8,
-     },
-     gender: {
-       type: String,
-       enum: ["male", "female", "other"],
-     },
-     role:{
-        type: String,
-        enum: ["patient"],
-        default:'patient'
-      },
-     avatar: String,
-     dob: Date,
-     address: String,
-     problem_name: String,
-     problem_description: String,
-     phone: String,
-   },
-   {
-     timestamps: true,
-   }
- );
- 
- // Model
- module.exports = mongoose.model("patients", PatientsSchema);
- 
+    avatar: String, //profile_picture of user
+    dob: Date, //Date of birth
+    address: String, //address of patient
+    problem_name: String, //Patient's problem (chest-pain,back-pain etc)
+    problem_description: String, //Patient's will elborate his problem
+    phone: String,
+  },
+  {
+    timestamps: true,
+  }
+);
+// Model
+module.exports = mongoose.model("patients", PatientsSchema);

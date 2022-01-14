@@ -1,6 +1,6 @@
 /**
  * Send email service for forgot password
- * @author Yousuf Kalim
+ * @CodeBy Shuja Naqvi
  */
 var nodemailer = require("nodemailer");
 const sender_name = process.env.MAILER_DOMAIN;
@@ -23,7 +23,6 @@ exports.sendEmail = (email, password) => {
         pass: sender_password,
       },
     });
-
     // Send email options
     var mailOptions = {
       from: `${sender_name} <${sender_email}>`,
@@ -31,7 +30,6 @@ exports.sendEmail = (email, password) => {
       subject: "Your password has been changed",
       text: password,
     };
-
     // Sending email
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {

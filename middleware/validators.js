@@ -1,6 +1,6 @@
 /**
  * All the validation
- * @author Yousuf Kalim
+ * @codeBy Shuja Naqvi
  */
 const { check, validationResult } = require("express-validator");
 
@@ -11,7 +11,7 @@ Validations
 */
 
 // You can create multiple validations strategies (Read express-validator documentation for more details)
-// User Signup Validation
+// Therapist Signup Validation
 exports.validateTherapists = [
   check("first_name", "First Name is required.").notEmpty().trim(),
   check("last_name", "Last Name is required.").notEmpty().trim(),
@@ -26,9 +26,10 @@ exports.validateTherapists = [
     .isLength({ min: 8 }),
   check("gender", "Gender is required.").notEmpty(),
   check("doc_specailization", "doc_specailization is required.").notEmpty(),
-  check("dob","date of birth is required").notEmpty().trim(),
+  check("dob", "date of birth is required").notEmpty().trim(),
   check("phone", "Phone is required.").notEmpty().isNumeric().trim(),
 ];
+// Patients Signup Validation
 exports.validatePatients = [
   check("first_name", "First Name is required.").notEmpty().trim(),
   check("last_name", "Last Name is required.").notEmpty().trim(),
@@ -37,17 +38,12 @@ exports.validatePatients = [
   check("patient_id", "patient_id is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
   check("problem_name", "problem_name is required.").notEmpty().trim(),
-  check("problem_description", "problem_description is required.").notEmpty().trim(),
+  check("problem_description", "problem_description is required.")
+    .notEmpty()
+    .trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
   check("gender", "Gender is required.").notEmpty(),
-  check("dob","date of birth is required").notEmpty().trim(),
-  check("phone", "Phone is required.").notEmpty().isNumeric().trim(),
-];
-// User Signup Validation
-exports.validateUserUpdate = [
-  check("name", "Name is required.").notEmpty().trim(),
-  check("email", "Email is required.").notEmpty().isEmail().trim(),
-  check("gender", "Gender is required.").notEmpty(),
+  check("dob", "date of birth is required").notEmpty().trim(),
   check("phone", "Phone is required.").notEmpty().isNumeric().trim(),
 ];
 // Login validation
@@ -74,14 +70,29 @@ exports.changePasswordValidate = [
     .trim()
     .isLength({ min: 8 }),
 ];
-
-exports.validateAssessmentrequest=[
+//validate Assessment
+exports.validateAssessmentrequest = [
   check("patient", "patientID is required.").notEmpty().trim(),
   check("therapist", "TherapistID  is required.").notEmpty().trim(),
-  check("form_title","form_title is required").notEmpty().trim(),
-  check("form_description","form_description is required").notEmpty().trim(),
+  check("form_title", "form_title is required").notEmpty().trim(),
+  check("form_description", "form_description is required").notEmpty().trim(),
 ];
-
+//validate Question
+exports.validateQuestion = [
+  check("question.*.question_text", "Question is required.").notEmpty().trim(),
+  check("question.*.type", "Question_Type  is required.").notEmpty().trim(),
+  check("question.*.assessment","AssessmenID is required").notEmpty().trim(),
+];
+//Validate Answer
+exports.validateAnswer = [
+  check("answer.*.question_id", "Question is required.").notEmpty().trim(),
+  check("answer.*.value", "Answer  is required.").notEmpty().trim(),
+];
+//Validate Feedback
+exports.validateFeedback = [
+  check("feedbacks.*.question_id", "Question_ID is required.").notEmpty().trim(),
+  check("feedbacks.*.feedback", "Feedback is   is required.").notEmpty().trim(),
+];
 /*
 ======================
 Result
