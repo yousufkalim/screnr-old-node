@@ -1,9 +1,9 @@
 /**
- * User schema
- * @author Yousuf Kalim
+ * Therapists schema
+ * @codeBy Shuja Naqvi
  */
 const mongoose = require("mongoose");
-// Schema
+
 const TherapistsSchema = new mongoose.Schema(
   {
     first_name: {
@@ -29,15 +29,23 @@ const TherapistsSchema = new mongoose.Schema(
       type: String,
       enum: ["male", "female", "other"],
     },
-    role:{
+    role: {
       type: String,
       enum: ["therapist"],
-      default:'therapist'
+      default: "therapist",
     },
-    avatar: String,
-    dob: Date,
-    address: String,
-    doc_specailization: String,
+    assessments:
+      //This will store ids of all the assessments taken by a Therapist
+      {
+        assessment: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Assessments",
+        },
+      },
+    avatar: String, //profile_picture
+    dob: Date, //Date of birth
+    address: String, //address of doctor
+    doc_specailization: String, //This attribute will store doctor's specialization(Neurology or Orthopedicsetc)
     phone: String,
   },
   {
