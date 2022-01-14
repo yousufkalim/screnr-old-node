@@ -6,7 +6,7 @@ const router = require("express").Router();
 const therapists = require("../controllers/therapists"); //Access to therapist controller
 const { upload } = require("../middleware/multer"); //Multer to upload profile_picture(avatar)
 const { validateTherapists, isValidated } = require("../middleware/validators"); //validating for the front-end according to the schema
-
+const { checkAuth, checkTherapist } = require("../middleware/checkAuth"); //Middleware to check jwt in header
 /**
  * ////////////////////////// Routes /////////////////////////
  * @method post Therapists signup
@@ -24,11 +24,11 @@ router.post(
   therapists.create //move to controller to create Therapist
 );
 // Read
-router.get("/", therapists.getAll); // Get all Therapists at once
-router.get("/:userId", therapists.getById); // Get one Therapist by it's id
+router.get("/", checkAuth, checkTherapist, therapists.getAll); // Get all Therapists at once
+router.get("/:therapistId", therapists.getById); // Get one Therapist by it's id
 // Update
-router.put("/:userId", upload.single("image"), therapists.update); // Update a specific Therapist by it's id
+router.put("/:therapistId", upload.single("image"), therapists.update); // Update a specific Therapist by it's id
 // Delete
-router.delete("/:userId", therapists.delete); // delete a Therapist user by it's id
+router.delete("/:therapistId", therapists.delete); // delete a Therapist user by it's id
 // Export
 module.exports = router;

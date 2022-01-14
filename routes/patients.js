@@ -6,7 +6,7 @@ const router = require("express").Router(); //Access to express router module
 const patients = require("../controllers/patients"); //Access to Patients controller
 const { upload } = require("../middleware/multer"); //Multer to upload profile_picture(avatar)
 const { validatePatients, isValidated } = require("../middleware/validators"); //validating for the front-end according to the schema
-
+const { checkAuth, checkPatient } = require("../middleware/checkAuth"); //Middleware to check jwt in header
 /**
  * ////////////////////////// Routes /////////////////////////
  * @method post Patients signup
@@ -25,12 +25,12 @@ router.post(
   patients.create //move to controller to create Patient
 );
 // Read
-router.get("/", patients.getAll); // Get all Patient at once
-router.get("/:userId", patients.getById); // Get one Patient by it's id
+router.get("/", checkAuth, checkPatient, patients.getAll); // Get all Patient at once
+router.get("/:patientId", patients.getById); // Get one Patient by it's id
 // Update
-router.put("/:userId", upload.single("image"), patients.update); // Update a specific Patient by it's id
+router.put("/:patientId", upload.single("image"), patients.update); // Update a specific Patient by it's id
 // Delete
-router.delete("/:userId", patients.delete); // delete a specific user by it's id
+router.delete("/:patientId", patients.delete); // delete a specific user by it's id
 
 // Export
 module.exports = router;

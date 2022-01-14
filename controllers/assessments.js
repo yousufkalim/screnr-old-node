@@ -5,6 +5,7 @@
 const Patients = require("../models/Patients"); //Accessing Patients
 const Therapists = require("../models/Therapists"); //Accessing Therapists
 const Assessments = require("../models/Assessments"); //Accessing Assessments
+const Questions = require("../models/Questions"); //Accessing Assessments
 
 /**
  * Create Assessments
@@ -20,21 +21,29 @@ exports.create = async (req, res) => {
     if (therapists && patients) {
       const assessment = await Assessments.create(req.body); //create Assessment
       if (assessment) {
-        var assessments = { assessment: assessment._id };
         therapists = await Therapists.findByIdAndUpdate(
           therapist,
-          { $push: { assessments: assessments } },
+          { $push: { assessments: assessment._id } },
           { new: true } //Assign therapist id of assessment
         );
         patients = await Patients.findByIdAndUpdate(
           patient,
-          { $push: { assessments: assessments } },
+          { $push: { assessments: assessment._id } },
           { new: true } //Assign therapist id of assessment
         );
+        for (var i = 0; i < req.body.question.length; i++) {
+          //as we have numbers of questions at a time
+          req.body.question[i].assessment = assessment._id;
+          var questions = await Questions.create(req.body.question[i]); //at every index there's a new question so we will store each question
+          const test = await Assessments.findByIdAndUpdate(
+            assessment._id,
+            { $push: { questions: questions.id } } //Reference of each question with the Assessment
+          );
+        }
         res.status(200).json({
           success: true,
           message: "Assessment Created",
-          Assessment: assessment._id,
+          Assessment: assessment,
           Therapist_Assessment: therapists.assessments,
           Patient_Assessment: patients.assessments,
         }); //success
@@ -55,9 +64,9 @@ exports.create = async (req, res) => {
 //Get All Assessment of a user
 exports.getAll = async (req, res) => {
   try {
-    let userID = req.params.userID;
-    const patient = await Assessments.find({ patient: userID }); //To check wether request by patient
-    const therapist = await Assessments.find({ therapist: userID }); //To check wether request by patient
+    let userId = req.params.userId;
+    const patient = await Assessments.find({ patient: userId }); //To check wether request by patient
+    const therapist = await Assessments.find({ therapist: userId }); //To check wether request by patient
     if (patient.length > 0) {
       //If request by patient
       res.status(200).json({ success: true, Assessment: patient }); //success
@@ -77,8 +86,10 @@ exports.getAll = async (req, res) => {
 //Get Assessment by ID
 exports.getAssessment = async (req, res) => {
   try {
-    const assessmentID = req.params.assessmentID; //get assessmentID from params
-    const assessment = await Assessments.findById(assessmentID).populate('questions') //finding assessment from db
+    const assessmentId = req.params.assessmentId; //get assessmentID from params
+    const assessment = await Assessments.findById(assessmentId).populate(
+      "questions"
+    ); //finding assessment from db
     if (assessment) res.status(200).json({ success: true, assessment });
     //if assessment is found
     else res.status(200).json({ success: false, message: "Invalid ID" }); //otherwise invalidID
@@ -90,9 +101,9 @@ exports.getAssessment = async (req, res) => {
 //update Assessment
 exports.updateAssessment = async (req, res) => {
   try {
-    const assessmentID = req.params.assessmentID; //Getting id from param
+    const assessmentId = req.params.assessmentId; //Getting id from param
     const assessment = await Assessments.findByIdAndUpdate(
-      assessmentID,
+      assessmentId,
       req.body,
       { new: true } //find Assessment and update it
     );
@@ -105,13 +116,13 @@ exports.updateAssessment = async (req, res) => {
   }
 };
 //start Assessment
-exports.startassessment = async (req, res) => {
+exports.startAssessment = async (req, res) => {
   try {
-    const assessmentID = req.params.assessmentID; //Getting AssessmentID from Params
-    var time = new Date(); //Inorder to set starttime getting date of today
+    const assessmentId = req.params.assessmentId; //Getting AssessmentID from Params
+    var time = new Date(); //inOrder to set start time getting date of today
     req.body.time_start = time; //Assign time to a body object
     var assessment = await Assessments.findByIdAndUpdate(
-      assessmentID,
+      assessmentId,
       req.body, //Storing start time of assessment with started status
       { new: true }
     );
@@ -123,30 +134,30 @@ exports.startassessment = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" }); //Failure... :(
   }
 };
-//endassessment
-exports.endassessment = async (req, res) => {
+//endAssessment
+exports.endAssessment = async (req, res) => {
   try {
-    const assessmentID = req.params.assessmentID; //Getting AssessmentID from Params
-    var assessment = await Assessments.findById(assessmentID); //find Assessment by its id
+    const assessmentId = req.params.assessmentId; //Getting AssessmentID from Params
+    var assessment = await Assessments.findById(assessmentId); //find Assessment by its id
     var time = new Date(); //find  Date today
-    var time_spent = time - assessment.time_start; //calculate time spent on excercise
-    var minutes = Math.floor((time_spent / (1000 * 60)) % 60); //convering milliseconds into minutes
-    var hours = Math.floor((time_spent / (1000 * 60 * 60)) % 24); //convering milliseconds into hours
+    var time_spent = time - assessment.time_start; //calculate time spent on exercise
+    var minutes = Math.floor((time_spent / (1000 * 60)) % 60); //converting milliseconds into minutes
+    var hours = Math.floor((time_spent / (1000 * 60 * 60)) % 24); //converting milliseconds into hours
     hours = hours < 10 ? "0" + hours : hours; //Formatting so that user can get it easily
     minutes = minutes < 10 ? "0" + minutes : minutes; //Formatting so that user can get it easily
     if (hours > 0) {
-      time_spent = hours + " hour" + ":" + minutes + "minutes"; //if excercise take more than an hour
+      time_spent = hours + " hour" + ":" + minutes + "minutes"; //if exercise take more than an hour
     } else {
-      time_spent = minutes + " minutes"; //If excercise take only few minutes
+      time_spent = minutes + " minutes"; //If exercise take only few minutes
     }
     req.body.time_spent = time_spent; //Assigning time spent to time_spent object
     req.body.submission_date = time;
-    assessment = await Assessments.findByIdAndUpdate(assessmentID, req.body, {
+    assessment = await Assessments.findByIdAndUpdate(assessmentId, req.body, {
       new: true,
     }); //update Assessment
     return res
       .status(200)
-      .json({ success: true, message: "Assessment Started", assessment }); //Sending resposne towards Front-end
+      .json({ success: true, message: "Assessment Started", assessment }); //Sending response towards Front-end
   } catch (err) {
     console.log("Error ----> ", err.message); //server error
     res.status(500).json({ success: false, message: "Internal server error" }); //internal server error

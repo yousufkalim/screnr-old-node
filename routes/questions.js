@@ -16,7 +16,7 @@ const { validateQuestion,validateAnswer,validateFeedback, isValidated } = requir
 // Read
 router.post("/", validateQuestion, isValidated, questions.create); // Create Questionair
 //Delete Question
-router.delete("/:questionID", questions.deletequestion);    //Delete a question
+router.delete("/:questionId", questions.deleteQuestion);    //Delete a question
 //Answer to a question 
 router.put("/answer",validateAnswer,isValidated,questions.answer); //answer to the questions
 //Answer to a question 
