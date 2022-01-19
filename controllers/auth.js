@@ -1,11 +1,12 @@
 /**
  * User auth controllers
- * @author Yousuf Kalim
+ * @author Shuja Naqvi
  */
-const Users = require("../models/Users");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { sendEmail } = require("../utils/sendEmail");
+const Therapists = require("../models/Therapists"); //Accessing Therapists schema
+const Patients = require("../models/Patients"); //Accessing Patient schema
+const bcrypt = require("bcryptjs"); //Hash Password
+const jwt = require("jsonwebtoken"); //Validate JWT
+const { sendEmail } = require("../utils/sendEmail"); //importing to sendEmail to users
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
 const tokenSecret = process.env.JWT_SECRET;
 
@@ -18,45 +19,55 @@ exports.login = async (req, res) => {
   try {
     // Getting email and password
     const { email, password } = req.body;
-
-    // Getting user from db
-    const user = await Users.findOne({ email });
-
-    if (!user) {
-      // If user not found
-      console.log(user);
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+    // Getting users from db
+    //As we have same login so checking all models :(
+    const therapist = await Therapists.findOne({ email }); //chk if request by therapist
+    const patients = await Patients.findOne({ email }); //chk if request by patients
+    if (therapist != null) {
+      //if request by therapist
+      // Comparing password
+      const isMatched = bcrypt.compareSync(password, therapist.password); //chk if password is correct
+      if (!isMatched) {
+        // If password not matched
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid Password" });
+      }
+      // Creating payload with therapist object
+      const payload = { therapist };
+      // Generating token
+      jwt.sign(payload, tokenSecret, { expiresIn: 360000 }, (err, token) => {
+        if (err) throw err;
+        // done
+        res.json({ success: true, therapist, token });
+      });
+    } else if (patients != null) {
+      //if request by Patient
+      const isMatched = bcrypt.compareSync(password, patients.password); //chk if password is correct
+      if (!isMatched) {
+        // If password not matched
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid Password" });
+      }
+      // Creating payload with patients object
+      const payload = { patients };
+      // Generating token
+      jwt.sign(payload, tokenSecret, { expiresIn: 360000 }, (err, token) => {
+        if (err) throw err;
+        // done
+        res.status(200).json({ success: true, patients, token }); //return patient with token
+      });
+    } else {
+      //If email is not valid
+      res.status(500).json({ success: false, message: "Invalid User" }); //email not found
     }
-
-    // Comparing password
-    const isMatched = bcrypt.compareSync(password, user.password);
-
-    if (!isMatched) {
-      // If password not matched
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid Password" });
-    }
-
-    // Creating payload with user object
-    const payload = { user };
-
-    // Generating token
-    jwt.sign(payload, tokenSecret, { expiresIn: 360000 }, (err, token) => {
-      if (err) throw err;
-
-      // done
-      res.json({ success: true, user, token });
-    });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
+    console.log("Error ----> ", err.message); //Server error
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
 /**
  * Change Password
  * @param {object} req
@@ -66,43 +77,50 @@ exports.changePassword = async (req, res) => {
   try {
     const { userId } = req.params;
     const { oldPassword, newPassword, confirmPassword } = req.body;
-
     if (newPassword !== confirmPassword) {
       return res.status(400).json({
         success: false,
         message: "New password and confirm password are not same",
       });
     }
-
-    let user = await Users.findById(userId);
-
-    if (!user) {
+    let therapists = await Therapists.findById(userId); //To chk if request by therapist
+    let patients = await Patients.findById(userId); //To chk if request by patients
+    if (therapists != null) {
+      //Request by Therapist
+      const isMatched = bcrypt.compareSync(oldPassword, therapists.password);
+      if (!isMatched) {
+        //if password is invalid
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid old Password" }); //password is invalid
+      }
+      therapists.password = bcrypt.hashSync(newPassword, parseInt(bcryptSalt)); //if password matched then update pswd
+      await therapists.save(); //update pswd
+      res.json({ success: true, therapists }); //true
+    } else if (patients) {
+      //Request by Patient
+      const isMatched = bcrypt.compareSync(oldPassword, patients.password);
+      if (!isMatched) {
+        //to chk if password is invalid
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid old Password" }); //password is invalid
+      }
+      therapists.password = bcrypt.hashSync(newPassword, parseInt(bcryptSalt)); //update pswd of patient
+      await therapists.save();
+      res.json({ success: true, patients }); //successfully updated...!
+    } else {
+      //if email not found
       return res
         .status(404)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "User not found" }); //invalid criteria
     }
-
-    const isMatched = bcrypt.compareSync(oldPassword, user.password);
-
-    if (!isMatched) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid old Password" });
-    }
-
-    // Generate token
-    user.password = bcrypt.hashSync(newPassword, parseInt(bcryptSalt));
-
-    await user.save();
-
-    res.json({ success: true, user });
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    console.log("Error ----> ", err.message); //Server Error
+    res.status(500).json({ success: false, message: "Internal server error" }); //server error
   }
 };
-
 /**
  * Forgot password
  * @param {object} req
@@ -110,35 +128,43 @@ exports.changePassword = async (req, res) => {
  */
 exports.forgot = async (req, res) => {
   try {
-    let { email } = req.params;
-    let user = await Users.findOne({ email });
-
-    if (!user) {
+    let { email } = req.params; //user's email
+    let therapists = await Therapists.findOne({ email }); //to chk request by therapist
+    let patients = await Patients.findOne({ email }); //to chk request by therapist
+    if (therapists) {
+      //if user is therapist
+      let randomPassword = Math.random().toString(36).slice(-8); //generate random pswd
+      sendEmail(email, randomPassword) // Sending email to therapist
+        .then(async () => {
+          // If email is sent then we have to update the password in db
+          therapists.password = await bcrypt.hash(
+            randomPassword,
+            parseInt(bcryptSalt)
+          );
+          await therapists.save(); //save updated pswd
+          // Done
+          res.json({ success: true, message: "Email sent successfully" });
+        });
+    } else if (patients) {
+      //if user is patients
+      let randomPassword = Math.random().toString(36).slice(-8); //generate random pswd
+      sendEmail(email, randomPassword) //send email to patient with pswd
+        .then(async () => {
+          // If email is sent then we have to update the password in db
+          patients.password = await bcrypt.hash(
+            randomPassword,
+            parseInt(bcryptSalt)
+          );
+          await patients.save(); //save patients pswd
+          // Done
+          res.json({ success: true, message: "Email sent successfully" }); //email sent
+        });
+    } else {
+      //if email is invalid
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-
-    // Generating random password
-    let randomPassword = Math.random().toString(36).slice(-8);
-
-    // Sending email to user
-    sendEmail(email, randomPassword)
-      .then(async () => {
-        // If email is sent then we have to update the password in db
-        user.password = await bcrypt.hash(randomPassword, parseInt(bcryptSalt));
-        await user.save();
-
-        // Done
-        res.json({ success: true, message: "Email sent successfully" });
-      })
-      .catch((err) => {
-        // Error handling
-        console.log("Error ----> ", err);
-        res
-          .status(500)
-          .json({ success: false, message: "Internal server error" });
-      });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
@@ -152,6 +178,7 @@ exports.forgot = async (req, res) => {
  * @param {object} res
  */
 exports.confirmAuth = async (req, res) => {
-  // If user authenticated
+  console.log("reuser is ", req.user);
+  // If user authenticated(validate user's token)
   res.json({ success: true, user: req.user });
 };

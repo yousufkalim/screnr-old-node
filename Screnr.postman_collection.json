@@ -1,0 +1,798 @@
+{
+	"info": {
+		"_postman_id": "6df5404f-3412-4d19-a7bd-ae171eb1f30d",
+		"name": "Screnr",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tharapist",
+			"item": [
+				{
+					"name": "Get therapist by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/therapists/61e1000817523626a400743b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"therapists",
+								"61e1000817523626a400743b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update therapist",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "doc_specailization",
+									"value": "Neurosurgeons",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/hp/Downloads/images.jfif"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/therapists/61e1000817523626a400743b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"therapists",
+								"61e1000817523626a400743b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET All PATIENT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/patients/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Therapist Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "first_name",
+									"value": "therapist",
+									"type": "default"
+								},
+								{
+									"key": "last_name",
+									"value": "house",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "shujanaqvi288@gmail.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "1234567890",
+									"type": "default"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "1234567890",
+									"type": "default"
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"type": "default"
+								},
+								{
+									"key": "address",
+									"value": "Johar Town Lahore",
+									"type": "default"
+								},
+								{
+									"key": "doc_specailization",
+									"value": "NueroSurgen",
+									"type": "default"
+								},
+								{
+									"key": "dob",
+									"value": "2000/01/01",
+									"type": "default"
+								},
+								{
+									"key": "phone",
+									"value": "03127378946",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/therapists",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"therapists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Therapist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/therapists/61e1004517523626a4007441",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"therapists",
+								"61e1004517523626a4007441"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"shujanaqvi288@gmail.com\",\"password\":\"1234567890\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Auth",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRpZW50cyI6eyJyb2xlIjoicGF0aWVudCIsIl9pZCI6IjYxZGMyYzdiMjY0NjQxMGZmNGVkZjk5NyIsImZpcnN0X25hbWUiOiJwYXRpZW50IiwibGFzdF9uYW1lIjoiaG91c2UiLCJlbWFpbCI6InAxQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJDZibFVKSmphZjZuNkN5RmlibU0zWi5wTFl3TXBMclA5NlhYMFZRaE1NR21OamNFdk52ZWNPIiwiZ2VuZGVyIjoibWFsZSIsImRvYiI6IjE5OTktMTItMzBUMTk6MDA6MDAuMDAwWiIsInBob25lIjoiMDMxMjczNzg5NDUiLCJhZGRyZXNzIjoiSm9oYXIgdG93biBMYWhvcmUiLCJuYXRpb25hbF9pZCI6IjMyMzg3ODM0Nzg2IiwicHJvYmxlbV9uYW1lIjoiTEVHUyBQQUlOIiwicHJvYmxlbV9kZXNjcmlwdGlvbiI6InRoaXMgaXMganVzdCBkdW1teSBkZXNjcmlwdGlvbiIsIm1pZGRsZV9uYW1lIjoiZGVhZCIsImF2YXRhciI6InVwbG9hZHNcXDE2NDE4MTkyNTg0NDItNmZiODc2YzZiMTViZDI1MjBhZGQ1ZjcyMGVkMjI5MmQgKDEpLmpwZyIsImNyZWF0ZWRBdCI6IjIwMjItMDEtMTBUMTI6NTQ6MTkuNzMxWiIsInVwZGF0ZWRBdCI6IjIwMjItMDEtMTBUMTI6NTQ6MTkuNzMxWiIsIl9fdiI6MCwiYXNzZXNzbWVudHMiOltdfSwiaWF0IjoxNjQxOTgyNDUxLCJleHAiOjE2NDIzNDI0NTF9.KXaqg09Z97pgARRhZilUdvTUAv3e2VVPGseMj0YHoJk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/auth/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change Password with userID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"oldPassword\":\"1234567890\",\"newPassword\":\"123456789\",\"confirmPassword\":\"123456789\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/auth/password/61e1000817523626a400743b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								"password",
+								"61e1000817523626a400743b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot email",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/auth/forgot/shujanaqvi288@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								"forgot",
+								"shujanaqvi288@gmail.com"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "patients",
+			"item": [
+				{
+					"name": "Patient Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "first_name",
+									"value": "patient",
+									"type": "default"
+								},
+								{
+									"key": "last_name",
+									"value": "house",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "a1@gmail.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "123456789",
+									"type": "default"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "123456789",
+									"type": "default"
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"type": "default"
+								},
+								{
+									"key": "patient_id",
+									"value": "1234554",
+									"type": "default"
+								},
+								{
+									"key": "dob",
+									"value": "1999/12/31",
+									"type": "default"
+								},
+								{
+									"key": "phone",
+									"value": "03127378945",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/hp/Downloads/6fb876c6b15bd2520add5f720ed2292d (1).jpg"
+								},
+								{
+									"key": "address",
+									"value": "Johar town Lahore",
+									"type": "default"
+								},
+								{
+									"key": "national_id",
+									"value": "32387834786",
+									"type": "default"
+								},
+								{
+									"key": "problem_name",
+									"value": "LEGS PAIN",
+									"type": "default"
+								},
+								{
+									"key": "problem_description",
+									"value": "this is just dummy description",
+									"type": "default"
+								},
+								{
+									"key": "middle_name",
+									"value": "dead",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/patients/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET all therapists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/therapists",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"therapists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get patient by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/patients/61e100d417523626a4007453",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"61e100d417523626a4007453"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Patient by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/patients/61e100ef17523626a4007459",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"61e100ef17523626a4007459"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update patients",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/hp/Downloads/download.jfif"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/patients/61e100d417523626a4007453",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"61e100d417523626a4007453"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Assessments",
+			"item": [
+				{
+					"name": "create Assessment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"patient\":\"61dc2c7b2646410ff4edf997\",\"therapist\":\"61deacd01bab8042dceaeaba\",\"form_title\":\"Dummy Title\",\"form_description\":\"Dummy Description about title,,,aaah Ingore it ... :P\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/assessments/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"assessments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Assessment by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/assessments/getassessment/61e1014217523626a4007460",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"assessments",
+								"getassessment",
+								"61e1014217523626a4007460"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Assessments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/assessments/61e100d417523626a4007453",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"assessments",
+								"61e100d417523626a4007453"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Assessment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"status\":\"accepted\",\"sets\":\"4\",\"reps\":\"12\",\"due_date\":\"2022-01-22\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/assessments/update/61e1014217523626a4007460",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"assessments",
+								"update",
+								"61e1014217523626a4007460"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Start Assessment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"status\":\"started\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/assessments/startassessment/61e1014217523626a4007460",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"assessments",
+								"startassessment",
+								"61e1014217523626a4007460"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "End Assessment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"status\":\"submitted\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/assessments/endassessment/61e1014217523626a4007460",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"assessments",
+								"endassessment",
+								"61e1014217523626a4007460"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Questions",
+			"item": [
+				{
+					"name": "Create Questionair",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question\":[\r\n        {\r\n        \"question_text\":\"Wht is your name\",\r\n        \"type\":\"short question\",\r\n        \"assessment\":\"61e1014217523626a4007460\",\r\n        \"answers\":[\"1\",\"2\",\"3\"]\r\n    },\r\n    {\r\n        \"question_text\":\"Wht is your name\",\r\n        \"type\":\"short question\",\r\n        \"assessment\":\"61e1014217523626a4007460\",\r\n        \"answers\":[\"1\",\"2\",\"3\"]\r\n    }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/questions/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"questions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Answer to a question",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"answer\":[\r\n        {\r\n        \"question_id\":\"61e1024b17523626a4007466\",\r\n        \"value\":\"I am shuja Naqvi\"\r\n    },\r\n    {\r\n        \"question_id\":\"61e1024b17523626a4007469\",\r\n        \"value\":\"I am shuja Naqvi\"\r\n    }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/questions/answer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"questions",
+								"answer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Feedback",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"feedbacks\":[\r\n        {\r\n        \"question_id\":\"61e1024b17523626a4007466\",\r\n        \"feedback\":\"ok alright!\"\r\n    },\r\n    {\r\n        \"question_id\":\"61e1024b17523626a4007469\",\r\n        \"feedback\":\"That's nice\"\r\n    }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/questions/feedback",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"questions",
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Question",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/questions/61dfdcc837abb73258977289",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"questions",
+								"61dfdcc837abb73258977289"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
