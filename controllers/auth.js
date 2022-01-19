@@ -22,7 +22,8 @@ exports.login = async (req, res) => {
     // Getting users from db
     //As we have same login so checking all models :(
     const therapist = await Therapists.findOne({ email }); //chk if request by therapist
-    const patients = await Patients.findOne({ email }); //chk if request by patients
+    const patient = await Patients.findOne({ email }); //chk if request by patients
+
     if (therapist != null) {
       //if request by therapist
       // Comparing password
@@ -47,20 +48,20 @@ exports.login = async (req, res) => {
           // var check_in=+therapist.check_ins + +increment
           therapist.check_ins = therapist.check_ins + increment;
           await therapist.save();
-          return res.json({ success: true, therapist, token });
+          return res.json({ success: true, "data": {...therapist._doc}, token });
         }
       );
-    } else if (patients != null) {
+    } else if (patient != null) {
       //if request by Patient
-      const isMatched = bcrypt.compareSync(password, patients.password); //chk if password is correct
+      const isMatched = bcrypt.compareSync(password, patient.password); //chk if password is correct
       if (!isMatched) {
         // If password not matched
         return res
           .status(400)
           .json({ success: false, message: "Invalid Password" });
       }
-      // Creating payload with patients object
-      const payload = { patients };
+      // Creating payload with patient object
+      const payload = { patient: patient };
       // Generating token
       jwt.sign(
         payload,
@@ -70,9 +71,9 @@ exports.login = async (req, res) => {
           if (err) throw err;
           // done
           const increment=1;
-          patients.check_ins = patients.check_ins + increment;
-          await patients.save();
-          return res.status(200).json({ success: true, patients, token }); //return patient with token
+          patient.check_ins = patient.check_ins + increment;
+          await patient.save();
+          return res.status(200).json({ success: true, "data": {...patient._doc}, token }); //return patient with token
         }
       );
     } else {
