@@ -18,9 +18,9 @@ const { checkAuth, checkPatient } = require("../middleware/checkAuth"); //Middle
 // Create - Therapists Signup
 router.post(
   "/",
-  upload.single("image"), //This will check if avatar is coming from body and store toa specific folder
-  validateTherapists, //Validate all the data coming from body
-  isValidated, //if data is validate
+  // upload.single("image"), //This will check if avatar is coming from body and store toa specific folder
+  // validateTherapists, //Validate all the data coming from body
+  // isValidated, //if data is validate
   therapists.create //move to controller to create Therapist
 );
 // Read

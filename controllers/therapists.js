@@ -13,6 +13,7 @@ const bcryptSalt = process.env.BCRYPT_SALT || 10;
  * @param {object} res
  */
 exports.create = async (req, res) => {
+  console.log("therapist", req.body);
   try {
     let { email, password, confirmPassword } = req.body; // Getting required fields from body
     if (password !== confirmPassword) {
@@ -30,7 +31,18 @@ exports.create = async (req, res) => {
         .status(409)
         .json({ success: false, message: "User already exists." });
     }
+    // else if (password !== confirmPassword) {
+    //   // Passwords not same
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Password and Confirm Password are not the same.",
+    //   });
+    // }
     // Getting url of the image
+    // if (req.file) {
+    //   req.body.avatar = req.file.path; // Creating a new property called avatar in body object
+    // }
+    req.body.role = "therapist"; //API Called by therapist
     if (req.file) {
       req.body.avatar = req.file.path; // Creating a new property called avatar in body object
     }

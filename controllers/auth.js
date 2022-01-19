@@ -200,6 +200,7 @@ exports.forgot = async (req, res) => {
  * @param {object} res
  */
 exports.confirmAuth = async (req, res) => {
+  console.log("reuser is ", req.user);
   // If user authenticated(validate user's token)
   return res.json({ success: true, user: req.user });
 };
