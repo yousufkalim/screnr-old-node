@@ -201,5 +201,5 @@ exports.forgot = async (req, res) => {
  */
 exports.confirmAuth = async (req, res) => {
   // If user authenticated(validate user's token)
-  res.json({ success: true, user: req.user });
+  return res.json({ success: true, user: req.user });
 };

@@ -35,7 +35,6 @@ exports.validatePatients = [
   check("last_name", "Last Name is required.").notEmpty().trim(),
   check("middle_name", "Middle Name is required.").notEmpty().trim(),
   check("national_id", "national_id is required.").notEmpty().trim(),
-  check("patient_id", "patient_id is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
   check("problem_name", "problem_name is required.").notEmpty().trim(),
   check("problem_description", "problem_description is required.")
@@ -86,7 +85,7 @@ exports.ValidateAssessmentRequest = [
 exports.validateQuestion = [
   check("question.*.question_text", "Question is required.").notEmpty().trim(),
   check("question.*.type", "Question_Type  is required.").notEmpty().trim(),
-  check("question.*.assessment","AssessmentID is required").notEmpty().trim(),
+  check("question.*.assessment", "AssessmentID is required").notEmpty().trim(),
 ];
 //Validate Answer
 exports.validateAnswer = [
@@ -95,7 +94,9 @@ exports.validateAnswer = [
 ];
 //Validate Feedback
 exports.validateFeedback = [
-  check("feedbacks.*.question_id", "Question_ID is required.").notEmpty().trim(),
+  check("feedbacks.*.question_id", "Question_ID is required.")
+    .notEmpty()
+    .trim(),
   check("feedbacks.*.feedback", "Feedback is   is required.").notEmpty().trim(),
 ];
 /*
@@ -114,7 +115,7 @@ exports.isValidated = (req, res, next) => {
   const errors = validationResult(req); // Validating the request by previous middleware's strategy
   if (!errors.isEmpty()) {
     // On error
-    res.status(400).send({ success: false, message: errors.array()[0].msg}); // Sending first error to the client from array of errors
+    res.status(400).send({ success: false, message: errors.array()[0].msg }); // Sending first error to the client from array of errors
   } else {
     // Validated successfully
     next(); // Pass the request to next middleware or controller
