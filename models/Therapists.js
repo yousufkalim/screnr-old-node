@@ -36,16 +36,18 @@ const TherapistsSchema = new mongoose.Schema(
     },
     assessments:
       //This will store ids of all the assessments taken by a Therapist
-      {
-        assessment: {
+      [
+        {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Assessments",
         },
-      },
+      ],
     avatar: String, //profile_picture
+    check_ins: { type: Number, default: 0 },
     dob: Date, //Date of birth
     address: String, //address of doctor
-    doc_specailization: String, //This attribute will store doctor's specialization(Neurology or Orthopedicsetc)
+    doc_specialization: String, //This attribute will store doctor's specialization(Neurology or Orthopedics etc)
+    last_password_changed: Date, //last time password changed
     phone: String,
   },
   {

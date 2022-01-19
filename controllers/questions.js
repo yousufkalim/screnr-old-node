@@ -30,15 +30,15 @@ exports.create = async (req, res) => {
   }
 };
 //Delete a Question
-exports.deletequestion = async (req, res) => {
+exports.deleteQuestion = async (req, res) => {
   try {
-    const questionID = req.params.questionID; //Getting ID from Params
-    var delquestion = await Questions.findById(questionID); //find Question from db
-    if (delquestion) {
-      delquestion = await Questions.findByIdAndDelete(questionID); //delete question
-      delquestion = await Assessments.findByIdAndUpdate(
-        delquestion.assessment, //finding questtion from assessment
-        { $pull: { questions: questionID } }, //Pull question from assessment's array of questions
+    const questionId = req.params.questionId; //Getting ID from Params
+    var delQuestion = await Questions.findById(questionId); //find Question from db
+    if (delQuestion) {
+      delQuestion = await Questions.findByIdAndDelete(questionId); //delete question
+      delQuestion = await Assessments.findByIdAndUpdate(
+        delQuestion.assessment, //finding question from assessment
+        { $pull: { questions: questionId } }, //Pull question from assessment's array of questions
         { new: true }
       );
       return res
