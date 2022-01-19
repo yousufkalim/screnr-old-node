@@ -2,8 +2,9 @@
  * Patient  controllers
  * @codeBy Shuja Naqvi
  */
-const Patients = require("../models/Patients"); //Accessing Ptient Schema
+const Patients = require("../models/Patients"); //Accessing Patient Schema
 const Therapists = require("../models/Therapists"); //Accessing Therapist Schema
+const Assessments = require("../models/Assessments");
 const bcrypt = require("bcryptjs"); //encrypt password
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
 
@@ -15,7 +16,8 @@ const bcryptSalt = process.env.BCRYPT_SALT || 10;
 exports.create = async (req, res) => {
   try {
     let { email, password } = req.body; // Getting required fields from body
-    const existingPatient = await Patients.findOne({ email }); // Finding already existing in pateint in db
+    //Assign id to a patient
+    const existingPatient = await Patients.findOne({ email }); // Finding already existing in Patient in db
     const existingTherapist = await Therapists.findOne({ email }); // Finding already existing in therapist in db
     if (existingPatient || existingTherapist) {
       // If we found existing user in db
@@ -23,14 +25,20 @@ exports.create = async (req, res) => {
         .status(409)
         .json({ success: false, message: "User already exists." });
     }
-
     // Getting url of the image
     if (req.file) {
       req.body.avatar = req.file.path; // Creating a new property called avatar in body object
     }
-    // Creating User
+    const patientCount = await Patients.find().sort({ $natural: -1 }).limit(1);
+    if (patientCount < 1) {
+      req.body.patient_id = 1;
+    }
+    if (patientCount > 0) {
+      const increment = 1;
+      req.body.patient_id = +patientCount[0].patient_id + +increment;
+    }
+    // // Creating User
     req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt)); // Hashing the password with salt 8
-    req.body.role = "patient"; //as request by a patient
     const user = await Patients.create(req.body); // Adding patient in db
     // Done
     res.json({ success: true, user }); //Success
@@ -48,10 +56,10 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const users = await Patients.find(); // Finding all the users from db
-    if (users.length > 0) res.status(200).json({ success: true, users });
+    const users = await Patients.find().populate("assessments"); // Finding all the users from db
+    if (users.length > 0) return res.status(200).json({ success: true, users });
     // Success
-    else res.status(400).json({ success: false, message: "No Patient Found" }); //faliure
+    else res.status(400).json({ success: false, message: "No Patient Found" }); //failure
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message); //server err
@@ -66,9 +74,9 @@ exports.getAll = async (req, res) => {
  */
 exports.getById = async (req, res) => {
   try {
-    const userId = req.params.userId; // Getting user id from URL parameter
-    const user = await Patients.findById(userId); // Finding user by id
-    if (user) res.status(200).json({ success: true, therapist: user });
+    const patientId = req.params.patientId; // Getting user id from URL parameter
+    const user = await Patients.findById(patientId).populate("assessments"); // Finding user by id
+    if (user) return res.status(200).json({ success: true, therapist: user });
     // Success
     else res.status(400).json({ success: false, message: "Invalid ID" });
   } catch (err) {
@@ -85,19 +93,19 @@ exports.getById = async (req, res) => {
  */
 exports.update = async (req, res) => {
   try {
-    const userId = req.params.userId; // Getting user id from URL parameter
+    const patientId = req.params.patientId; // Getting user id from URL parameter
     if (req.file) {
       req.body.avatar = req.file.path; // Creating a new property called avatar in body object
     }
-    const user = await Patients.findByIdAndUpdate(userId, req.body, {
+    const user = await Patients.findByIdAndUpdate(patientId, req.body, {
       new: true,
-    }); // Updating the Patient
+    }).populate("assessments"); // Updating the Patient
     if (user) res.status(200).json({ success: true, user });
     // Success
     else res.status(400).json({ success: false, message: "No Patient Found" }); //failure
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message); //server Errir
+    console.log("Error ----> ", err.message); //server Error
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -109,8 +117,8 @@ exports.update = async (req, res) => {
  */
 exports.delete = async (req, res) => {
   try {
-    const userId = req.params.userId; // Getting Patient id from URL parameter
-    const user = await Patients.findByIdAndDelete(userId); // Deleting the Patient
+    const patientId = req.params.patientId; // Getting Patient id from URL parameter
+    const user = await Patients.findByIdAndDelete(patientId); // Deleting the Patient
     if (user) res.status(200).json({ success: true, user });
     // Success
     else res.status(400).json({ success: false, message: "User Not Found" }); //failure

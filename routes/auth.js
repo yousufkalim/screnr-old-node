@@ -4,7 +4,7 @@
  */
 const router = require("express").Router(); //Access to express router module
 const auth = require("../controllers/auth"); //Access to auth controller
-const { checkAuth } = require("../middleware/checkAuth"); //Middleware to check jwt in header
+const { checkAuth,checkPatient } = require("../middleware/checkAuth"); //Middleware to check jwt in header
 const {
   validateLogin,
   isValidated,

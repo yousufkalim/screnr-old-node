@@ -25,17 +25,68 @@ exports.checkAuth = (req, res, next) => {
     const decoded = jwt.verify(token, tokenSecret);
     console.log("decoded is", decoded.user);
     req.user = decoded.user;
+    if (decoded.patients) {
+      req.user = decoded.patients;
+      res.set(
+        "cache-control",
+        "no-cache, no-store, private, must-revalidate, post-check=0, pre-check=0"
+      );
+      // Done
+      next();
+    }
     // If user authenticated
-    res.set(
-      "cache-control",
-      "no-cache, no-store, private, must-revalidate, post-check=0, pre-check=0"
-    );
-    // Done
-    next();
+    else if (decoded.therapist) {
+      req.user = decoded.therapist;
+      res.set(
+        "cache-control",
+        "no-cache, no-store, private, must-revalidate, post-check=0, pre-check=0"
+      );
+      // Done
+      next();
+    }
   } catch (err) {
     // If not
-    res
+    return res
       .status(403)
       .json({ success: false, message: "Your session has been expired" });
+  }
+};
+//check Patient
+exports.checkPatient = (req, res, next) => {
+  try {
+    if (req.user.role == "patient") {
+      next();
+    } else if (req.user.role == "therapist") {
+      res
+        .status(403)
+        .json({ success: false, message: "You are not authorized" });
+    }
+  } catch (err) {
+    // If not
+    res.status(403).json({
+      success: false,
+      message: "Your session has been expired",
+      err: err.message,
+    });
+  }
+};
+
+//Check Therapist
+exports.checkTherapist = (req, res, next) => {
+  try {
+    if (req.user.role == "therapist") {
+      next();
+    } else if (req.user.role == "patient") {
+      res
+        .status(403)
+        .json({ success: false, message: "You are not authorized" });
+    }
+  } catch (err) {
+    // If not
+    res.status(403).json({
+      success: false,
+      message: "Your session has been expired",
+      err: err.message,
+    });
   }
 };

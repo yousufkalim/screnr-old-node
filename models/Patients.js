@@ -7,6 +7,11 @@ const mongoose = require("mongoose");
 // Schema
 const PatientsSchema = new mongoose.Schema(
   {
+    patient_id: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
     first_name: {
       type: String,
       required: true,
@@ -40,18 +45,20 @@ const PatientsSchema = new mongoose.Schema(
       default: "patient",
     },
     national_id: {
-      //This will store national_id od patient inorder to validate him in future
+      //This will store national_id od patient inOrder to validate him in future
       type: String,
       required: true,
     },
-    assessments: 
+    last_password_changed: Date,
+    check_ins: { type: Number, default: 0 }, //Total times login
+    assessments:
       //This will store ids of all the assessments assigned to a patient
-      {
-        assessment: {
+      [
+        {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Assessments",
+          ref: "assessments",
         },
-      },
+      ],
     avatar: String, //profile_picture of user
     dob: Date, //Date of birth
     address: String, //address of patient

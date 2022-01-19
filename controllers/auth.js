@@ -22,7 +22,8 @@ exports.login = async (req, res) => {
     // Getting users from db
     //As we have same login so checking all models :(
     const therapist = await Therapists.findOne({ email }); //chk if request by therapist
-    const patients = await Patients.findOne({ email }); //chk if request by patients
+    const patient = await Patients.findOne({ email }); //chk if request by patients
+
     if (therapist != null) {
       //if request by therapist
       // Comparing password
@@ -36,28 +37,45 @@ exports.login = async (req, res) => {
       // Creating payload with therapist object
       const payload = { therapist };
       // Generating token
-      jwt.sign(payload, tokenSecret, { expiresIn: 360000 }, (err, token) => {
-        if (err) throw err;
-        // done
-        res.json({ success: true, therapist, token });
-      });
-    } else if (patients != null) {
+      jwt.sign(
+        payload,
+        tokenSecret,
+        { expiresIn: 360000 },
+        async (err, token) => {
+          if (err) throw err;
+          // done
+          const increment = 1;
+          // var check_in=+therapist.check_ins + +increment
+          therapist.check_ins = therapist.check_ins + increment;
+          await therapist.save();
+          return res.json({ success: true, "data": {...therapist._doc}, token });
+        }
+      );
+    } else if (patient != null) {
       //if request by Patient
-      const isMatched = bcrypt.compareSync(password, patients.password); //chk if password is correct
+      const isMatched = bcrypt.compareSync(password, patient.password); //chk if password is correct
       if (!isMatched) {
         // If password not matched
         return res
           .status(400)
           .json({ success: false, message: "Invalid Password" });
       }
-      // Creating payload with patients object
-      const payload = { patients };
+      // Creating payload with patient object
+      const payload = { patient: patient };
       // Generating token
-      jwt.sign(payload, tokenSecret, { expiresIn: 360000 }, (err, token) => {
-        if (err) throw err;
-        // done
-        res.status(200).json({ success: true, patients, token }); //return patient with token
-      });
+      jwt.sign(
+        payload,
+        tokenSecret,
+        { expiresIn: 360000 },
+        async (err, token) => {
+          if (err) throw err;
+          // done
+          const increment=1;
+          patient.check_ins = patient.check_ins + increment;
+          await patient.save();
+          return res.status(200).json({ success: true, "data": {...patient._doc}, token }); //return patient with token
+        }
+      );
     } else {
       //If email is not valid
       res.status(500).json({ success: false, message: "Invalid User" }); //email not found
@@ -95,7 +113,8 @@ exports.changePassword = async (req, res) => {
           .json({ success: false, message: "Invalid old Password" }); //password is invalid
       }
       therapists.password = bcrypt.hashSync(newPassword, parseInt(bcryptSalt)); //if password matched then update pswd
-      await therapists.save(); //update pswd
+      therapists.last_password_changed = new Date();
+      await therapists.save(); //update password
       res.json({ success: true, therapists }); //true
     } else if (patients) {
       //Request by Patient
@@ -106,8 +125,9 @@ exports.changePassword = async (req, res) => {
           .status(400)
           .json({ success: false, message: "Invalid old Password" }); //password is invalid
       }
-      therapists.password = bcrypt.hashSync(newPassword, parseInt(bcryptSalt)); //update pswd of patient
-      await therapists.save();
+      patients.password = bcrypt.hashSync(newPassword, parseInt(bcryptSalt)); //update password of patient
+      patients.last_password_changed = new Date();
+      await patients.save();
       res.json({ success: true, patients }); //successfully updated...!
     } else {
       //if email not found
@@ -141,6 +161,7 @@ exports.forgot = async (req, res) => {
             randomPassword,
             parseInt(bcryptSalt)
           );
+          therapists.last_password_changed = new Date();
           await therapists.save(); //save updated pswd
           // Done
           res.json({ success: true, message: "Email sent successfully" });
@@ -155,6 +176,7 @@ exports.forgot = async (req, res) => {
             randomPassword,
             parseInt(bcryptSalt)
           );
+          patients.last_password_changed = new Date();
           await patients.save(); //save patients pswd
           // Done
           res.json({ success: true, message: "Email sent successfully" }); //email sent
@@ -180,5 +202,5 @@ exports.forgot = async (req, res) => {
 exports.confirmAuth = async (req, res) => {
   console.log("reuser is ", req.user);
   // If user authenticated(validate user's token)
-  res.json({ success: true, user: req.user });
+  return res.json({ success: true, user: req.user });
 };
