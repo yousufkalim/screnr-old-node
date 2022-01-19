@@ -14,7 +14,7 @@ const bcryptSalt = process.env.BCRYPT_SALT || 10;
  */
 exports.create = async (req, res) => {
   try {
-     let { email, password, confirmPassword } = req.body; // Getting required fields from body
+    let { email, password, confirmPassword } = req.body; // Getting required fields from body
     if (password !== confirmPassword) {
       // Passwords not same
       return res.status(400).json({
@@ -29,7 +29,7 @@ exports.create = async (req, res) => {
       return res
         .status(409)
         .json({ success: false, message: "User already exists." });
-    } 
+    }
     // Getting url of the image
     if (req.file) {
       req.body.avatar = req.file.path; // Creating a new property called avatar in body object
@@ -52,10 +52,10 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const users = await Therapists.find(); // Finding all the therapists from db
+    const users = await Therapists.find().populate("assessments"); // Finding all the therapists from db
     if (users.length > 0) return res.json({ success: true, Therapist: users });
     // Success
-    else  res.json({ success: true, message: "No therapist foud" });
+    else res.json({ success: true, message: "No therapist foud" });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err); //console error
@@ -69,8 +69,8 @@ exports.getAll = async (req, res) => {
  */
 exports.getById = async (req, res) => {
   try {
-    const therapistId= req.params.therapistId; // Getting user id from URL parameter
-    const user = await Therapists.findById(therapistId); // Finding user by id
+    const therapistId = req.params.therapistId; // Getting user id from URL parameter
+    const user = await Therapists.findById(therapistId).populate("assessments"); // Finding user by id
     if (user) return res.status(200).json({ success: true, therapist: user });
     // Success
     else res.status(400).json({ success: false, message: "Invalid ID" });
@@ -94,7 +94,7 @@ exports.update = async (req, res) => {
     }
     const user = await Therapists.findByIdAndUpdate(userId, req.body, {
       new: true,
-    }); // Updating the user
+    }).populate("assessments"); // Updating the user
     if (user) return res.status(200).json({ success: true, user });
     // Success
     else res.status(400).json({ success: false, message: "Unable to update" }); //failure

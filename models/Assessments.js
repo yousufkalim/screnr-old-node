@@ -9,12 +9,12 @@ const AssessmentsSchema = new mongoose.Schema(
     patient: {
       //id of the patient to whom this  is assigned
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Patients", //Reference to the model of patient
+      ref: "patients", //Reference to the model of patient
     },
     therapist: {
       //id of the Therapist who is taking this assessment
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Therapists", //Reference to the model of Therapist
+      ref: "therapists", //Reference to the model of Therapist
     },
     type: {
       //type of assessment

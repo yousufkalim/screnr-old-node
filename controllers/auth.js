@@ -69,7 +69,7 @@ exports.login = async (req, res) => {
         async (err, token) => {
           if (err) throw err;
           // done
-          const increment=1;
+          const increment = 1;
           patients.check_ins = patients.check_ins + increment;
           await patients.save();
           return res.status(200).json({ success: true, patients, token }); //return patient with token
@@ -200,5 +200,5 @@ exports.forgot = async (req, res) => {
  */
 exports.confirmAuth = async (req, res) => {
   // If user authenticated(validate user's token)
-  res.json({ success: true, user: req.user });
+  return res.json({ success: true, user: req.user });
 };
