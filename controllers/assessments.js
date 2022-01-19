@@ -16,10 +16,11 @@ const Questions = require("../models/Questions"); //Accessing Assessments
 exports.create = async (req, res) => {
   try {
     let { patient, therapist } = req.body;
+    let test;
     var therapists = await Therapists.findById(therapist); //To chk id os therapist is valid or not
     var patients = await Patients.findById(patient); //To chk id os patient is valid or not
     if (therapists && patients) {
-      const assessment = await Assessments.create(req.body); //create Assessment
+      var assessment = await Assessments.create(req.body); //create Assessment
       if (assessment) {
         therapists = await Therapists.findByIdAndUpdate(
           therapist,
@@ -31,22 +32,35 @@ exports.create = async (req, res) => {
           { $push: { assessments: assessment._id } },
           { new: true } //Assign therapist id of assessment
         );
-        for (var i = 0; i < req.body.question.length; i++) {
-          //as we have numbers of questions at a time
-          req.body.question[i].assessment = assessment._id;
-          var questions = await Questions.create(req.body.question[i]); //at every index there's a new question so we will store each question
-          const test = await Assessments.findByIdAndUpdate(
-            assessment._id,
-            { $push: { questions: questions.id } } //Reference of each question with the Assessment
-          );
-        }
-        res.status(200).json({
-          success: true,
-          message: "Assessment Created",
-          Assessment: assessment,
-          Therapist_Assessment: therapists.assessments,
-          Patient_Assessment: patients.assessments,
-        }); //success
+
+        const postQuestions = () => {
+          return new Promise((resolve, reject) => {
+            const lastIndex = req.body.question.length - 1;
+            req.body.question.map(async (question, index) => {
+              try {
+                question.assessment = assessment.id;
+                var questions = await Questions.create(question); //at every index there's a new question so we will store each question
+                test = await Assessments.findByIdAndUpdate(
+                  assessment.id,
+                  { $push: { questions: questions.id } },
+                  { new: true } //Reference of each question with the Assessment
+                ).populate("questions");
+                if (lastIndex === index) {
+                  resolve(test);
+                }
+              } catch (err) {
+                reject(err);
+              }
+            });
+          });
+        };
+        postQuestions().then((tests) => {
+          return res.status(200).json({
+            success: true,
+            message: "Assessment Created",
+            tests,
+          }); //success
+        });
       } else
         res
           .status(400)
@@ -65,8 +79,14 @@ exports.create = async (req, res) => {
 exports.getAll = async (req, res) => {
   try {
     let userId = req.params.userId;
-    const patient = await Assessments.find({ patient: userId }); //To check wether request by patient
-    const therapist = await Assessments.find({ therapist: userId }); //To check wether request by patient
+
+    const patient = await Assessments.find({ patient: userId })
+      .populate("questions")
+      .populate("therapist"); //To check wether request by patient
+    const therapist = await Assessments.find({ therapist: userId })
+      .populate("questions")
+      .populate("patient");
+    //To check wether request by patient
     if (patient.length > 0) {
       //If request by patient
       res.status(200).json({ success: true, Assessment: patient }); //success
@@ -87,12 +107,24 @@ exports.getAll = async (req, res) => {
 exports.getAssessment = async (req, res) => {
   try {
     const assessmentId = req.params.assessmentId; //get assessmentID from params
-    const assessment = await Assessments.findById(assessmentId).populate(
-      "questions"
-    ); //finding assessment from db
-    if (assessment) res.status(200).json({ success: true, assessment });
+    const user = req.user;
+    console.log("user", user._id);
+    const assessment = await Assessments.findById(assessmentId)
+      .populate("questions")
+      .populate("patient")
+      .populate("therapist"); //finding assessment from db
+    console.log("therapist", assessment.therapist.id);
+    if (
+      user._id == assessment.therapist.id ||
+      user._id == assessment.patient.id
+    )
+      //check if token belongs to the same patient/therapist
+      return res.status(200).json({ success: true, assessment });
     //if assessment is found
-    else res.status(200).json({ success: false, message: "Invalid ID" }); //otherwise invalidID
+    else
+      return res
+        .status(200)
+        .json({ success: false, message: "unauthorized Person" }); //otherwise invalidID
   } catch (err) {
     console.log("Error ----> ", err.message); //server error
     res.status(500).json({ success: false, message: "Internal server error" }); //failure Somehow
@@ -106,7 +138,10 @@ exports.updateAssessment = async (req, res) => {
       assessmentId,
       req.body,
       { new: true } //find Assessment and update it
-    );
+    )
+      .populate("questions")
+      .populate("patient")
+      .populate("therapist");
     if (assessment) res.status(200).json({ success: true, assessment });
     //if data updated Successfully...!
     else res.status(200).json({ success: true, message: "Invalid ID" }); //if id is invalid....!
@@ -125,7 +160,10 @@ exports.startAssessment = async (req, res) => {
       assessmentId,
       req.body, //Storing start time of assessment with started status
       { new: true }
-    );
+    )
+      .populate("questions")
+      .populate("patient")
+      .populate("therapist");
     return res
       .status(200)
       .json({ success: true, message: "Assessment Started", assessment }); //Success
@@ -140,6 +178,7 @@ exports.endAssessment = async (req, res) => {
     const assessmentId = req.params.assessmentId; //Getting AssessmentID from Params
     var assessment = await Assessments.findById(assessmentId); //find Assessment by its id
     var time = new Date(); //find  Date today
+    var test;
     var time_spent = time - assessment.time_start; //calculate time spent on exercise
     var minutes = Math.floor((time_spent / (1000 * 60)) % 60); //converting milliseconds into minutes
     var hours = Math.floor((time_spent / (1000 * 60 * 60)) % 24); //converting milliseconds into hours
@@ -152,12 +191,37 @@ exports.endAssessment = async (req, res) => {
     }
     req.body.time_spent = time_spent; //Assigning time spent to time_spent object
     req.body.submission_date = time;
-    assessment = await Assessments.findByIdAndUpdate(assessmentId, req.body, {
-      new: true,
-    }); //update Assessment
-    return res
-      .status(200)
-      .json({ success: true, message: "Assessment Started", assessment }); //Sending response towards Front-end
+    const PostAnswers = () => {
+      const lastIndex = req.body.answer.length - 1;
+      return new Promise((resolve, reject) => {
+        try {
+          req.body.answer.map(async (answer, index) => {
+            test = await Questions.findByIdAndUpdate(
+              answer.question_id,
+              {
+                value: answer.value,
+              },
+              { new: true }
+            );
+            if (lastIndex === index) {
+              resolve(test);
+            }
+          });
+        } catch (err) {
+          reject(err);
+        }
+      });
+    };
+    PostAnswers().then(async (tests) => {
+      assessment = await Assessments.findByIdAndUpdate(assessmentId, req.body, {
+        new: true,
+      }).populate("questions"); //update Assessment
+      return res.status(200).json({
+        success: true,
+        message: "Assessment ended",
+        Assessments: assessment,
+      }); //success
+    });
   } catch (err) {
     console.log("Error ----> ", err.message); //server error
     res.status(500).json({ success: false, message: "Internal server error" }); //internal server error

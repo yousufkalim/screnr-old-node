@@ -15,7 +15,7 @@ const QuestionsSchema = new mongoose.Schema(
     assessment: {
       //link each question to an assessment
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Assessments",
+      ref: "assessments",
     },
   },
   {

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6df5404f-3412-4d19-a7bd-ae171eb1f30d",
+		"_postman_id": "e8a91314-04ed-4f98-b74c-9479a9bfda53",
 		"name": "Screnr",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -47,12 +47,7 @@
 									"type": "file",
 									"src": "/C:/Users/hp/Downloads/images.jfif"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "http://localhost:5000/api/therapists/61e1000817523626a400743b",
@@ -73,6 +68,16 @@
 				{
 					"name": "GET All PATIENT",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aGVyYXBpc3QiOnsicm9sZSI6InRoZXJhcGlzdCIsImFzc2Vzc21lbnRzIjpbIjYxZTE3MGY3NmRiNTEwM2JkOGVhOTg3MSIsIjYxZTE3MTUzNzRiMzg4MzIxY2I1M2EwNyIsIjYxZTE3MTljMGJhNmVmMjhlMGMwOWUwMSIsIjYxZTE3MmU4MGJhNmVmMjhlMGMwOWUwZCIsIjYxZTJiYTUxYzQzMGRlNWJjMzIzMjMwNSJdLCJjaGVja19pbnMiOjgsIl9pZCI6IjYxZTE1OGFkOTVhM2I2MWVhNDg3YzhlYiIsImZpcnN0X25hbWUiOiJ0aGVyYXBpc3QiLCJsYXN0X25hbWUiOiJob3VzZSIsImVtYWlsIjoic2h1amFuYXF2aTI4OEBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRtR0xMWS83cWtQNXNhLkJEYng0ZkpPZ0JmWlJYd25iM3BpeXBEUm1rVmVpQ0dCTWN2TVh5VyIsImdlbmRlciI6Im1hbGUiLCJhZGRyZXNzIjoiSm9oYXIgVG93biBMYWhvcmUiLCJkb2Nfc3BlY2lhbGl6YXRpb24iOiJOdWVyb1N1cmdlbiIsImRvYiI6IjE5OTktMTItMzFUMTk6MDA6MDAuMDAwWiIsInBob25lIjoiMDMxMjczNzg5NDYiLCJjcmVhdGVkQXQiOiIyMDIyLTAxLTE0VDExOjA0OjEzLjczN1oiLCJ1cGRhdGVkQXQiOiIyMDIyLTAxLTE1VDE3OjI3OjIwLjQzN1oiLCJfX3YiOjAsImxhc3RfcGFzc3dvcmRfY2hhbmdlZCI6IjIwMjItMDEtMTRUMTE6MTU6MDcuMzkxWiJ9LCJpYXQiOjE2NDIyNjg0MzIsImV4cCI6MTY0MjYyODQzMn0.R88y4mrRiaz8r7Q_necKay_xupFVsKkakvblu5WwSAc",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -135,7 +140,7 @@
 									"type": "default"
 								},
 								{
-									"key": "doc_specailization",
+									"key": "doc_specialization",
 									"value": "NueroSurgen",
 									"type": "default"
 								},
@@ -199,7 +204,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"email\":\"shujanaqvi288@gmail.com\",\"password\":\"1234567890\"}",
+							"raw": "{\"email\":\"p2@gmail.com\",\"password\":\"123456789\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -331,7 +336,7 @@
 								},
 								{
 									"key": "email",
-									"value": "a1@gmail.com",
+									"value": "a4@gmail.com",
 									"type": "default"
 								},
 								{
@@ -352,7 +357,8 @@
 								{
 									"key": "patient_id",
 									"value": "1234554",
-									"type": "default"
+									"type": "default",
+									"disabled": true
 								},
 								{
 									"key": "dob",
@@ -517,7 +523,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"patient\":\"61dc2c7b2646410ff4edf997\",\"therapist\":\"61deacd01bab8042dceaeaba\",\"form_title\":\"Dummy Title\",\"form_description\":\"Dummy Description about title,,,aaah Ingore it ... :P\"}",
+							"raw": "{\"patient\":\"61e159ee3797ae27988d53dd\",\"therapist\":\"61e158ad95a3b61ea487c8eb\",\"form_title\":\"Dummy Title\",\"form_description\":\"Dummy Description about title,,,aaah Ingore it ... :P\",\"sets\":\"3\",\"reps\":\"12\",\"due_date\":\"2022/01/19\",\n     \"question\":[\n        {\n        \"question_text\":\"where are you from\",\n        \"type\":\"Multiple choice\",\n        \"assessment\":\"\",\n        \"answers\":[\"Gujrat\",\"Lahore\",\"Islambad\"]\n    },\n    {\n        \"question_text\":\"You got this Problem since\",\n        \"type\":\"short question\",\n        \"assessment\":\"\",\n        \"answers\":[\"2 years\",\"childhood\",\"2 weeks\"]\n    }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -543,10 +549,20 @@
 				{
 					"name": "Get all Assessment by id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRpZW50cyI6eyJyb2xlIjoicGF0aWVudCIsImNoZWNrX2lucyI6OCwiYXNzZXNzbWVudHMiOlsiNjFlM2RjY2I3ZTUzZGM2Y2Y3NzU1OTNjIiwiNjFlNjY2NzVkNGIzYTAwMzk1NmQ1YWRiIl0sIl9pZCI6IjYxZTE1OWVlMzc5N2FlMjc5ODhkNTNkZCIsImZpcnN0X25hbWUiOiJwYXRpZW50IiwibGFzdF9uYW1lIjoiaG91c2UiLCJlbWFpbCI6InAyQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGtkdjV4MGdSWHBuTTlCdGIwZVp3ME9rOGVPTm4yL1Q2emp3YURLR0tSemQ2QmszVFZRT1JPIiwiZ2VuZGVyIjoibWFsZSIsImRvYiI6IjE5OTktMTItMzBUMTk6MDA6MDAuMDAwWiIsInBob25lIjoiMDMxMjczNzg5NDUiLCJhZGRyZXNzIjoiSm9oYXIgdG93biBMYWhvcmUiLCJuYXRpb25hbF9pZCI6IjMyMzg3ODM0Nzg2IiwicHJvYmxlbV9uYW1lIjoiTEVHUyBQQUlOIiwicHJvYmxlbV9kZXNjcmlwdGlvbiI6InRoaXMgaXMganVzdCBkdW1teSBkZXNjcmlwdGlvbiIsIm1pZGRsZV9uYW1lIjoiZGVhZCIsImF2YXRhciI6InVwbG9hZHNcXDE2NDIxNTg1NzQwNzctNmZiODc2YzZiMTViZDI1MjBhZGQ1ZjcyMGVkMjI5MmQgKDEpLmpwZyIsImNyZWF0ZWRBdCI6IjIwMjItMDEtMTRUMTE6MDk6MzQuNDIyWiIsInVwZGF0ZWRBdCI6IjIwMjItMDEtMThUMDc6MDQ6MjIuMzU3WiIsIl9fdiI6MCwibGFzdF9wYXNzd29yZF9jaGFuZ2VkIjoiMjAyMi0wMS0xNFQxMToxNDoyOS45MjlaIn0sImlhdCI6MTY0MjQ5MTc3NCwiZXhwIjoxNjQyODUxNzc0fQ.z1E_BMeN2dAuPIOkparfT-MpYdNJdx1koppM4D_iImE",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/api/assessments/getassessment/61e1014217523626a4007460",
+							"raw": "http://localhost:5000/api/assessments/getassessment/61e66675d4b3a003956d5adb",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -556,7 +572,7 @@
 								"api",
 								"assessments",
 								"getassessment",
-								"61e1014217523626a4007460"
+								"61e66675d4b3a003956d5adb"
 							]
 						}
 					},
@@ -565,10 +581,20 @@
 				{
 					"name": "Get All Assessments",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aGVyYXBpc3QiOnsicm9sZSI6InRoZXJhcGlzdCIsImFzc2Vzc21lbnRzIjpbIjYxZTNkY2NiN2U1M2RjNmNmNzc1NTkzYyIsIjYxZTY2Njc1ZDRiM2EwMDM5NTZkNWFkYiJdLCJjaGVja19pbnMiOjksIl9pZCI6IjYxZTE1OGFkOTVhM2I2MWVhNDg3YzhlYiIsImZpcnN0X25hbWUiOiJ0aGVyYXBpc3QiLCJsYXN0X25hbWUiOiJob3VzZSIsImVtYWlsIjoic2h1amFuYXF2aTI4OEBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRtR0xMWS83cWtQNXNhLkJEYng0ZkpPZ0JmWlJYd25iM3BpeXBEUm1rVmVpQ0dCTWN2TVh5VyIsImdlbmRlciI6Im1hbGUiLCJhZGRyZXNzIjoiSm9oYXIgVG93biBMYWhvcmUiLCJkb2Nfc3BlY2lhbGl6YXRpb24iOiJOdWVyb1N1cmdlbiIsImRvYiI6IjE5OTktMTItMzFUMTk6MDA6MDAuMDAwWiIsInBob25lIjoiMDMxMjczNzg5NDYiLCJjcmVhdGVkQXQiOiIyMDIyLTAxLTE0VDExOjA0OjEzLjczN1oiLCJ1cGRhdGVkQXQiOiIyMDIyLTAxLTE4VDA3OjA0OjIyLjEwOFoiLCJfX3YiOjAsImxhc3RfcGFzc3dvcmRfY2hhbmdlZCI6IjIwMjItMDEtMTRUMTE6MTU6MDcuMzkxWiJ9LCJpYXQiOjE2NDI0OTA0MjEsImV4cCI6MTY0Mjg1MDQyMX0.IHpmW1qwJvprEVY2Z5hTk0yzPbfM1ZDtthLrY4nF-ng",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/api/assessments/61e100d417523626a4007453",
+							"raw": "http://localhost:5000/api/assessments/61e159ee3797ae27988d53dd",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -577,7 +603,7 @@
 							"path": [
 								"api",
 								"assessments",
-								"61e100d417523626a4007453"
+								"61e159ee3797ae27988d53dd"
 							]
 						}
 					},
@@ -590,7 +616,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"status\":\"accepted\",\"sets\":\"4\",\"reps\":\"12\",\"due_date\":\"2022-01-22\"}",
+							"raw": "{\"status\":\"archive\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -598,7 +624,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5000/api/assessments/update/61e1014217523626a4007460",
+							"raw": "http://localhost:5000/api/assessments/update/61e66675d4b3a003956d5adb",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -608,7 +634,7 @@
 								"api",
 								"assessments",
 								"update",
-								"61e1014217523626a4007460"
+								"61e66675d4b3a003956d5adb"
 							]
 						}
 					},
@@ -629,7 +655,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5000/api/assessments/startassessment/61e1014217523626a4007460",
+							"raw": "http://localhost:5000/api/assessments/startassessment/61e66675d4b3a003956d5adb",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -639,7 +665,7 @@
 								"api",
 								"assessments",
 								"startassessment",
-								"61e1014217523626a4007460"
+								"61e66675d4b3a003956d5adb"
 							]
 						}
 					},
@@ -652,7 +678,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"status\":\"submitted\"}",
+							"raw": "{\"status\":\"submitted\",\n    \"answer\":[\n        {\n        \"question_id\":\"61e66677d4b3a003956d5ae0\",\n        \"value\":\"childhood\"\n        },\n        {\n        \"question_id\":\"61e66677d4b3a003956d5adf\",\n        \"value\":\"Gujrat\"\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -660,7 +686,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5000/api/assessments/endassessment/61e1014217523626a4007460",
+							"raw": "http://localhost:5000/api/assessments/endassessment/61e66675d4b3a003956d5adb",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -670,7 +696,7 @@
 								"api",
 								"assessments",
 								"endassessment",
-								"61e1014217523626a4007460"
+								"61e66675d4b3a003956d5adb"
 							]
 						}
 					},
@@ -682,43 +708,13 @@
 			"name": "Questions",
 			"item": [
 				{
-					"name": "Create Questionair",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"question\":[\r\n        {\r\n        \"question_text\":\"Wht is your name\",\r\n        \"type\":\"short question\",\r\n        \"assessment\":\"61e1014217523626a4007460\",\r\n        \"answers\":[\"1\",\"2\",\"3\"]\r\n    },\r\n    {\r\n        \"question_text\":\"Wht is your name\",\r\n        \"type\":\"short question\",\r\n        \"assessment\":\"61e1014217523626a4007460\",\r\n        \"answers\":[\"1\",\"2\",\"3\"]\r\n    }\r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:5000/api/questions/",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "5000",
-							"path": [
-								"api",
-								"questions",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Answer to a question",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"answer\":[\r\n        {\r\n        \"question_id\":\"61e1024b17523626a4007466\",\r\n        \"value\":\"I am shuja Naqvi\"\r\n    },\r\n    {\r\n        \"question_id\":\"61e1024b17523626a4007469\",\r\n        \"value\":\"I am shuja Naqvi\"\r\n    }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"answer\":[\r\n        {\r\n        \"question_id\":\"61e3dccc7e53dc6cf7755940\",\r\n        \"value\":\"I am shuja Naqvi\"\r\n    },\r\n    {\r\n        \"question_id\":\"61e3dccc7e53dc6cf7755941\",\r\n        \"value\":\"JUST 24\"\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -748,7 +744,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"feedbacks\":[\r\n        {\r\n        \"question_id\":\"61e1024b17523626a4007466\",\r\n        \"feedback\":\"ok alright!\"\r\n    },\r\n    {\r\n        \"question_id\":\"61e1024b17523626a4007469\",\r\n        \"feedback\":\"That's nice\"\r\n    }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"feedbacks\":[\r\n        {\r\n        \"question_id\":\"61e3dccc7e53dc6cf7755940\",\r\n        \"feedback\":\"oh cool.. :)\"\r\n    },\r\n    {\r\n        \"question_id\":\"61e3dccc7e53dc6cf7755941\",\r\n        \"feedback\":\"Young enough .. ummmm\"\r\n    },\r\n    {\r\n        \"question_id\":\"61e66677d4b3a003956d5ae0\",\r\n        \"feedback\":\"Not too late\"\r\n    },\r\n    {\r\n        \"question_id\":\"61e66677d4b3a003956d5adf\",\r\n        \"feedback\":\"That's why you are facing this\"\r\n    }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -776,8 +772,12 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
-							"raw": "http://localhost:5000/api/questions/61dfdcc837abb73258977289",
+							"raw": "http://localhost:5000/api/questions/61e66677d4b3a003956d5adf",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -786,7 +786,7 @@
 							"path": [
 								"api",
 								"questions",
-								"61dfdcc837abb73258977289"
+								"61e66677d4b3a003956d5adf"
 							]
 						}
 					},

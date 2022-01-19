@@ -39,7 +39,7 @@ const TherapistsSchema = new mongoose.Schema(
       [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Assessments",
+          ref: "assessments",
         },
       ],
     avatar: String, //profile_picture

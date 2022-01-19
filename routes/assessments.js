@@ -4,7 +4,7 @@
  */
 const router = require("express").Router();
 const assessments = require("../controllers/assessments");
-
+const { checkAuth } = require("../middleware/checkAuth"); //Middleware to check jwt in header
 const {
   ValidateAssessmentRequest,
   isValidated,
@@ -24,7 +24,11 @@ router.post(
   isValidated, //if validate/not
   assessments.create //create Assessment
 );
-router.get("/getassessment/:assessmentID", assessments.getAssessment); //get an assessment
+router.get(
+  "/getassessment/:assessmentId",
+  checkAuth,
+  assessments.getAssessment
+); //get an assessment
 router.get("/:userId", assessments.getAll); //get All Assessments of a patient/Therapist
 router.put("/update/:assessmentId", assessments.updateAssessment); //update Assessment
 router.put("/startassessment/:assessmentId", assessments.startAssessment); //start assessment

@@ -8,8 +8,9 @@ const mongoose = require("mongoose");
 const PatientsSchema = new mongoose.Schema(
   {
     patient_id: {
-      type: String,
+      type: Number,
       required: true,
+      unique: true,
     },
     first_name: {
       type: String,
@@ -55,7 +56,7 @@ const PatientsSchema = new mongoose.Schema(
       [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Assessments",
+          ref: "assessments",
         },
       ],
     avatar: String, //profile_picture of user

@@ -41,7 +41,7 @@ exports.checkAuth = (req, res, next) => {
     }
   } catch (err) {
     // If not
-    res
+    return res
       .status(403)
       .json({ success: false, message: "Your session has been expired" });
   }
@@ -58,13 +58,11 @@ exports.checkPatient = (req, res, next) => {
     }
   } catch (err) {
     // If not
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Your session has been expired",
-        err: err.message,
-      });
+    res.status(403).json({
+      success: false,
+      message: "Your session has been expired",
+      err: err.message,
+    });
   }
 };
 
@@ -80,12 +78,10 @@ exports.checkTherapist = (req, res, next) => {
     }
   } catch (err) {
     // If not
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: "Your session has been expired",
-        err: err.message,
-      });
+    res.status(403).json({
+      success: false,
+      message: "Your session has been expired",
+      err: err.message,
+    });
   }
 };
