@@ -4,8 +4,10 @@
  */
 const Therapists = require("../models/Therapists"); //Accessing model
 const Patients = require("../models/Patients"); //Accessing model
+const jwt = require("jsonwebtoken"); //Validate JWT
 const bcrypt = require("bcryptjs"); //npm module to encrypt password
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
+const tokenSecret = process.env.JWT_SECRET;
 
 /**
  * Create Therapist - Signup
@@ -13,10 +15,10 @@ const bcryptSalt = process.env.BCRYPT_SALT || 10;
  * @param {object} res
  */
 exports.create = async (req, res) => {
-  console.log("therapist", req.body);
   try {
-    let { email, password, confirmPassword } = req.body; // Getting required fields from body
-    if (password !== confirmPassword) {
+    let { email, password, confirm_password } = req.body; // Getting required fields from body
+
+    if (password !== confirm_password) {
       // Passwords not same
       return res.status(400).json({
         success: false,
@@ -31,26 +33,31 @@ exports.create = async (req, res) => {
         .status(409)
         .json({ success: false, message: "User already exists." });
     }
-    // else if (password !== confirmPassword) {
-    //   // Passwords not same
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "Password and Confirm Password are not the same.",
-    //   });
-    // }
-    // Getting url of the image
-    // if (req.file) {
-    //   req.body.avatar = req.file.path; // Creating a new property called avatar in body object
-    // }
     req.body.role = "therapist"; //API Called by therapist
     if (req.file) {
       req.body.avatar = req.file.path; // Creating a new property called avatar in body object
     }
     // Creating User
     req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt)); // Hashing the password with salt 8
-    const user = await Therapists.create(req.body); // Adding user in db
-    // Done
-    res.json({ success: true, user }); //Success
+    const therapist = await Therapists.create(req.body); // Adding user in db
+
+    // Creating payload with therapist object
+    const payload = { therapist };
+    // Generating token
+    jwt.sign(
+      payload,
+      tokenSecret,
+      { expiresIn: 360000 },
+      async (err, token) => {
+        if (err) throw err;
+        // done
+        const increment = 1;
+        // var check_in=+therapist.check_ins + +increment
+        therapist.check_ins = therapist.check_ins + increment;
+        await therapist.save();
+        return res.json({ success: true, "data": {...therapist._doc}, token });
+      }
+    );
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
