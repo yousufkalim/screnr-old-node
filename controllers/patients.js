@@ -58,7 +58,7 @@ exports.getAll = async (req, res) => {
   try {
     const users = await Patients.find().populate("assessments"); // Finding all the users from db
 
-    if (users.length > 0) return res.status(200).json({ success: true, data: [...users] });
+    if (users.length > 0) return res.status(200).json({ success: true, data: users });
     // Success
     else res.status(400).json({ success: false, message: "No Patient Found" }); //failure
   } catch (err) {
