@@ -25,13 +25,12 @@ exports.checkAuth = (req, res, next) => {
     const decoded = jwt.verify(token, tokenSecret);
     console.log("decoded is", decoded.user);
     req.user = decoded.user;
-    if (decoded.patients) {
-      req.user = decoded.patients;
+    if (decoded.patient) {
+      req.user = decoded.patient;
       res.set(
         "cache-control",
         "no-cache, no-store, private, must-revalidate, post-check=0, pre-check=0"
       );
-      // Done
       next();
     }
     // If user authenticated
@@ -41,7 +40,6 @@ exports.checkAuth = (req, res, next) => {
         "cache-control",
         "no-cache, no-store, private, must-revalidate, post-check=0, pre-check=0"
       );
-      // Done
       next();
     }
   } catch (err) {

@@ -20,6 +20,7 @@ const {
 //Create - Assessment
 router.post(
   "/",
+  checkAuth,
   ValidateAssessmentRequest, //Validate require data from body
   isValidated, //if validate/not
   assessments.create //create Assessment

@@ -12,81 +12,94 @@ const Questions = require("../models/Questions"); //Accessing Assessments
  * @param {object} req
  * @param {object} res
  */
-
 exports.create = async (req, res) => {
   try {
-    let { patient, therapist } = req.body;
-    let test;
-    var therapists = await Therapists.findById(therapist); //To chk id os therapist is valid or not
-    var patients = await Patients.findById(patient); //To chk id os patient is valid or not
-    if (therapists && patients) {
-      var assessment = await Assessments.create(req.body); //create Assessment
-      if (assessment) {
-        therapists = await Therapists.findByIdAndUpdate(
-          therapist,
-          { $push: { assessments: assessment._id } },
-          { new: true } //Assign therapist id of assessment
-        );
-        patients = await Patients.findByIdAndUpdate(
-          patient,
-          { $push: { assessments: assessment._id } },
-          { new: true } //Assign therapist id of assessment
-        );
+    let { patient_id } = req.body;
 
-        const postQuestions = () => {
-          return new Promise((resolve, reject) => {
-            const lastIndex = req.body.question.length - 1;
-            req.body.question.map(async (question, index) => {
-              try {
-                question.assessment = assessment.id;
-                var questions = await Questions.create(question); //at every index there's a new question so we will store each question
-                test = await Assessments.findByIdAndUpdate(
-                  assessment.id,
-                  { $push: { questions: questions.id } },
-                  { new: true } //Reference of each question with the Assessment
-                ).populate("questions");
-                if (lastIndex === index) {
-                  resolve(test);
-                }
-              } catch (err) {
-                reject(err);
-              }
-            });
-          });
-        };
-        postQuestions().then((tests) => {
+    const patientID = patient_id;
+    const therapistID = req.user._id;
+
+    req.body.patient = patientID;
+    req.body.therapist = therapistID; // This is hugh moment.
+
+    let therapist = await Therapists.findById(therapistID); //To chk id os therapist is valid or not
+    let patient = await Patients.findById(patientID); //To chk id os patient is valid or not
+    if (therapist && patient) {
+      let assessment = await Assessments.create(req.body); //create Assessment
+      if (assessment) {
+        therapist = await Therapists.findByIdAndUpdate(
+          therapistID,
+          { $push: { assessments: assessment._id } },
+          { new: true } //Assign therapist id of assessment
+        );
+        patient = await Patients.findByIdAndUpdate(
+          patientID,
+          { $push: { assessments: assessment._id } },
+          { new: true } //Assign therapist id of assessment
+        );
+        let tests = await postQuestions(req, assessment);
+        if(tests){
           return res.status(200).json({
             success: true,
             message: "Assessment Created",
             tests,
           }); //success
-        });
-      } else
-        res
+        } else {
+          res
           .status(400)
-          .json({ success: false, message: "Unable to create Assessment" }); //Failure Somehow
-    } else
-      res
+          .json({ success: false, message: "Something went wrong while parsing questions" }); //Failure Somehow
+        }
+      } else {
+        res
         .status(400)
-        .json({ success: false, message: "Invalid Patient or therapist" }); //incase any of id is invalid
+        .json({ success: false, message: "Unable to create Assessment" }); //Failure Somehow
+      }
+    } else {
+      res
+      .status(400)
+      .json({ success: false, message: "Invalid Patient or therapist" }); //incase any of id is invalid
+    }
   } catch (err) {
     // Error handling
-    console.log("Error ----> ", err.message);
+    console.trace("Error ----> ", err.message);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
+const postQuestions = (req, assessment) => {
+  return new Promise((resolve, reject) => {
+    const lastIndex = req.body.questions_array.length - 1;
+    req.body.questions_array.map(async (question, index) => {
+      try {
+        question.assessment = assessment._id;
+        let questionObj = await Questions.create(question); //at every index there's a new question so we will store each question
+        test = await Assessments.findByIdAndUpdate(
+          assessment.id,
+          { $push: { questions: questionObj._id } },
+          { new: true } //Reference of each question with the Assessment
+        ).populate("questions");
+        if (lastIndex === index) {
+          resolve(test);
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  });
+};
+
 //Get All Assessment of a user
 exports.getAll = async (req, res) => {
   try {
+
     let userId = req.params.userId;
 
     const patient = await Assessments.find({ patient: userId })
       .populate("questions")
-      .populate("therapist"); //To check wether request by patient
+      .populate("therapist"); //To check wether request by therapist
     const therapist = await Assessments.find({ therapist: userId })
       .populate("questions")
-      .populate("patient");
-    //To check wether request by patient
+      .populate("patient"); //To check wether request by patient
     if (patient.length > 0) {
       //If request by patient
       res.status(200).json({ success: true, Assessment: patient }); //success
@@ -103,12 +116,12 @@ exports.getAll = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
 //Get Assessment by ID
 exports.getAssessment = async (req, res) => {
   try {
     const assessmentId = req.params.assessmentId; //get assessmentID from params
     const user = req.user;
-    console.log("user", user._id);
     const assessment = await Assessments.findById(assessmentId)
       .populate("questions")
       .populate("patient")
