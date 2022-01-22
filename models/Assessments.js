@@ -27,8 +27,7 @@ const AssessmentsSchema = new mongoose.Schema(
       enum: ["requested", "started", "submitted", "reviewed", "archive"],
       default: "requested",
     },
-    form_title: String, //Title of the Assessment
-    form_description: String, //Patient will elaborate his/her problem and will request the doctor to accept assessment request
+    exercise: String,
     sets: Number, //sets for exercise assigned by Therapist
     reps: Number, //reps for exercise assigned by Therapist
     due_date: Date, //deadline to submit assessment

@@ -71,21 +71,18 @@ exports.changePasswordValidate = [
 ];
 //validate Assessment
 exports.ValidateAssessmentRequest = [
-  check("patient", "patientID is required.").notEmpty().trim(),
-  check("therapist", "TherapistID  is required.").notEmpty().trim(),
-  check("form_title", "form_title is required").notEmpty().trim(),
-  check("form_description", "form_description is required").notEmpty().trim(),
+  check("patient_id", "Patient ID is required.").notEmpty().trim(),
   check("sets", "Sets are required").notEmpty().trim(),
   check("reps", "Reps are required").notEmpty().trim(),
   check("due_date", "due_date is required").notEmpty().trim(),
-  check("question.*.question_text", "Question is required.").notEmpty().trim(),
-  check("question.*.type", "Question_Type  is required.").notEmpty().trim(),
+  check("questions_array.*.title", "Question title is required.").notEmpty().trim(),
+  check("questions_array.*.type", "Question type is required.").notEmpty().trim(),
 ];
 //validate Question
 exports.validateQuestion = [
-  check("question.*.question_text", "Question is required.").notEmpty().trim(),
-  check("question.*.type", "Question_Type  is required.").notEmpty().trim(),
-  check("question.*.assessment", "AssessmentID is required").notEmpty().trim(),
+  check("questions_array.*.title", "Question title is required.").notEmpty().trim(),
+  check("questions_array.*.type", "Question type is required.").notEmpty().trim(),
+  check("questions_array.*.assessment", "AssessmentID is required").notEmpty().trim(),
 ];
 //Validate Answer
 exports.validateAnswer = [
