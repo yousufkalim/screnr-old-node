@@ -76,8 +76,8 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
   try {
     const patientId = req.params.patientId; // Getting user id from URL parameter
-    const user = await Patients.findById(patientId).populate("assessments"); // Finding user by id
-    if (user) return res.status(200).json({ success: true, therapist: user });
+    const patient = await Patients.findById(patientId).populate("assessments"); // Finding user by id
+    if (patient) return res.status(200).json({ success: true, patient });
     // Success
     else res.status(400).json({ success: false, message: "Invalid ID" });
   } catch (err) {
