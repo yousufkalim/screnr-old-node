@@ -107,9 +107,8 @@ exports.getAll = async (req, res) => {
       //If request by Therapist
       res.status(200).json({ success: true, Assessment: therapist }); //If request by Therapist
     } else
-      res
-        .status(400)
-        .json({ success: false, message: "Invalid Patient or therapist" }); //incase any of id is invalid
+      // If no assessments found.
+      res.status(200).json({ success: true, Assessment: [] });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -232,6 +231,47 @@ exports.endAssessment = async (req, res) => {
       return res.status(200).json({
         success: true,
         message: "Assessment ended",
+        Assessments: assessment,
+      }); //success
+    });
+  } catch (err) {
+    console.log("Error ----> ", err.message); //server error
+    res.status(500).json({ success: false, message: "Internal server error" }); //internal server error
+  }
+};
+//reviewAssessment
+exports.reviewAssessment = async (req, res) => {
+  try {
+    const assessmentId = req.params.assessmentId; //Getting AssessmentID from Params
+    var assessment = await Assessments.findById(assessmentId); //find Assessment by its id
+    const PostAnswers = () => {
+      const lastIndex = req.body.feedbacks.length - 1;
+      return new Promise((resolve, reject) => {
+        try {
+          req.body.feedbacks.map(async (feedback, index) => {
+            test = await Questions.findByIdAndUpdate(
+              feedback.question_id,
+              {
+                feedback: feedback.feedback,
+              },
+              { new: true }
+            );
+            if (lastIndex === index) {
+              resolve(test);
+            }
+          });
+        } catch (err) {
+          reject(err);
+        }
+      });
+    };
+    PostAnswers().then(async (tests) => {
+      assessment = await Assessments.findByIdAndUpdate(assessmentId, req.body, {
+        new: true,
+      }).populate("questions"); //update Assessment
+      return res.status(200).json({
+        success: true,
+        message: "Assessment reviewed",
         Assessments: assessment,
       }); //success
     });
