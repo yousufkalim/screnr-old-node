@@ -200,7 +200,30 @@ exports.forgot = async (req, res) => {
  * @param {object} res
  */
 exports.confirmAuth = async (req, res) => {
-  console.log("reuser is ", req.user);
-  // If user authenticated(validate user's token)
-  return res.json({ success: true, user: req.user });
+  try {
+    // Getting email and password
+    const userID = req.user._id;
+
+    console.log(`THIS IS THE userID: ${userID}`);
+
+    // Getting users from db
+    //As we have same login so checking all models :(
+    const therapist = await Therapists.findOne({ _id: userID }); //chk if request by therapist
+    const patient = await Patients.findOne({ _id: userID }); //chk if request by patients
+
+    if (therapist != null) {
+      // if requested by Therapist
+      return res.json({ success: true, "user": therapist });
+    } else if (patient != null) {
+      // if requested by Patient
+      return res.json({ success: true, "user": patient });
+    } else {
+      // If email is not valid
+      res.status(500).json({ success: false, message: "Invalid User" }); //email not found
+    }
+  } catch (err) {
+    // Error handling
+    console.log("Error ----> ", err.message); //Server error
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 };
