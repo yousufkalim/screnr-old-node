@@ -41,7 +41,6 @@ exports.validatePatients = [
     .notEmpty()
     .trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
-  check("gender", "Gender is required.").notEmpty(),
   check("dob", "date of birth is required").notEmpty().trim(),
   check("phone", "Phone is required.").notEmpty().isNumeric().trim(),
 ];

@@ -35,10 +35,10 @@ const PatientsSchema = new mongoose.Schema(
       required: true,
       minlength: 8,
     },
-    gender: {
-      type: String,
-      enum: ["male", "female", "other"],
-    },
+    // gender: {
+    //   type: String,
+    //   enum: ["male", "female", "other"],
+    // }, // This has been gotten ride of.
     role: {
       type: String,
       enum: ["patient"],
