@@ -44,11 +44,6 @@ const PatientsSchema = new mongoose.Schema(
       enum: ["patient"],
       default: "patient",
     },
-    national_id: {
-      //This will store national_id od patient inOrder to validate him in future
-      type: String,
-      required: true,
-    },
     last_password_changed: Date,
     check_ins: { type: Number, default: 0 }, //Total times login
     assessments:

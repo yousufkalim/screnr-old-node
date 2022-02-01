@@ -34,7 +34,6 @@ exports.validatePatients = [
   check("first_name", "First Name is required.").notEmpty().trim(),
   check("last_name", "Last Name is required.").notEmpty().trim(),
   check("middle_name", "Middle Name is required.").notEmpty().trim(),
-  check("national_id", "national_id is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
   check("problem_name", "problem_name is required.").notEmpty().trim(),
   check("problem_description", "problem_description is required.")
