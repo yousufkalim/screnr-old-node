@@ -94,6 +94,13 @@ exports.validateFeedback = [
     .trim(),
   check("feedbacks.*.feedback", "Feedback is   is required.").notEmpty().trim(),
 ];
+//validate ExistingQuestions
+exports.ValidateExistingQuestionsRead = [
+  check("query", "Query is required.").notEmpty().trim(),
+];
+exports.ValidateExistingQuestionsInsert = [
+  check("text", "Text is required.").notEmpty().trim(),
+];
 /*
 ======================
 Result

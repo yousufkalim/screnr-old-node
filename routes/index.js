@@ -10,5 +10,6 @@ router.use("/patients", require("./patients")); //All the Patients routes
 router.use("/assessments", require("./assessments")); //All assessments routes
 router.use("/questions",require("./questions"));
 router.use("/auth", require("./auth")); // All the auth routes
+router.use("/existing_questions", require("./existingQuestions")); // All the auth routes
 // Export
 module.exports = router;
