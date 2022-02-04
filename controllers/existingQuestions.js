@@ -48,7 +48,7 @@
    try {
     const { query } = req.body;
     const existingQuestions = await ExistingQuestions.find({
-        text: {
+        title: {
             "$regex": query
         }
     });
