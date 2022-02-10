@@ -19,6 +19,7 @@ const { checkAuth, checkTherapist } = require("../middleware/checkAuth"); //Midd
 // Create - Patients Signup
 router.post(
   "/",
+  checkAuth,
   upload.single("image"), //This will check if avatar is coming from body and store to a specific folder
   validatePatients, //Validate all the data coming from body
   isValidated, //if data is validated

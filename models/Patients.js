@@ -12,6 +12,11 @@ const PatientsSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    doc_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "therapists",
+      required: true,
+    },
     first_name: {
       type: String,
       required: true,

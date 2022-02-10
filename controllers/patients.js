@@ -16,6 +16,7 @@ const bcryptSalt = process.env.BCRYPT_SALT || 10;
 exports.create = async (req, res) => {
   try {
     let { email, password } = req.body; // Getting required fields from body
+    const therapistID = req.user._id; // will be returned by the checkAuth middleware
     //Assign id to a patient
     const existingPatient = await Patients.findOne({ email }); // Finding already existing in Patient in db
     const existingTherapist = await Therapists.findOne({ email }); // Finding already existing in therapist in db
@@ -39,7 +40,10 @@ exports.create = async (req, res) => {
     }
     // // Creating User
     req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt)); // Hashing the password with salt 8
-    const user = await Patients.create(req.body); // Adding patient in db
+    const user = await Patients.create({
+      ...req.body,
+      doc_id: therapistID
+    }); // Adding patient in db
     // Done
     res.json({ success: true, user }); //Success
   } catch (err) {
@@ -56,7 +60,10 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-    const users = await Patients.find().populate("assessments"); // Finding all the users from db
+
+    const therapistID = req.user._id; // will be returned by the checkAuth middleware
+
+    const users = await Patients.find({ doc_id: therapistID }).populate("assessments"); // Finding all the users from db
 
     return res.status(200).json({ success: true, data: users });
   } catch (err) {
