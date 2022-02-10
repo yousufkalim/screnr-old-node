@@ -4,7 +4,6 @@
  */
 const Patients = require("../models/Patients"); //Accessing Patient Schema
 const Therapists = require("../models/Therapists"); //Accessing Therapist Schema
-const Assessments = require("../models/Assessments");
 const bcrypt = require("bcryptjs"); //encrypt password
 const bcryptSalt = process.env.BCRYPT_SALT || 10;
 
@@ -29,14 +28,6 @@ exports.create = async (req, res) => {
     // Getting url of the image
     if (req.file) {
       req.body.avatar = req.file.path; // Creating a new property called avatar in body object
-    }
-    const patientCount = await Patients.find().sort({ $natural: -1 }).limit(1);
-    if (patientCount < 1) {
-      req.body.patient_id = 1;
-    }
-    if (patientCount > 0) {
-      const increment = 1;
-      req.body.patient_id = +patientCount[0].patient_id + +increment;
     }
     // // Creating User
     req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt)); // Hashing the password with salt 8
@@ -80,11 +71,29 @@ exports.getAll = async (req, res) => {
  */
 exports.getById = async (req, res) => {
   try {
+    const userID = req.user._id;
+
+    const therapistUser = await Therapists.findOne({
+      _id: userID
+    });
+
+    const patientUser = await Patients.findOne({
+      _id: userID
+    });
+
     const patientId = req.params.patientId; // Getting user id from URL parameter
     const patient = await Patients.findById(patientId).populate("assessments"); // Finding user by id
-    if (patient) return res.status(200).json({ success: true, patient });
-    // Success
-    else res.status(400).json({ success: false, message: "Invalid ID" });
+
+    if (patient) {
+      if(patientUser){
+        // do nothing
+      } else if(!patient._doc.doc_id.equals(therapistUser._doc._id)){
+        return res.status(400).json({ success: false, message: "You are not authorized to perform this action." });
+      }
+      return res.status(200).json({ success: true, patient });
+    } else {
+      res.status(400).json({ success: false, message: "Invalid ID" });
+    } 
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
