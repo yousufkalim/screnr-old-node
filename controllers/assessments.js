@@ -31,7 +31,13 @@ exports.create = async (req, res) => {
 
     let therapist = await Therapists.findById(therapistID); //To chk id os therapist is valid or not
     let patient = await Patients.findById(patientID); //To chk id os patient is valid or not
+
     if (therapist && patient) {
+      if(!patient._doc.doc_id.equals(therapist._doc._id)){
+        res
+        .status(400)
+        .json({ success: false, message: "You are not authorized to perform this action." });
+      }
       let assessment = await Assessments.create(req.body); //create Assessment
       if (assessment) {
         therapist = await Therapists.findByIdAndUpdate(

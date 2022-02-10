@@ -27,6 +27,7 @@ exports.create = async (req, res) => {
     }
     const existingTherapist = await Therapists.findOne({ email }); // Finding already existing Therapist
     const existingPatient = await Patients.findOne({ email }); // Finding already existing Patients
+
     if (existingTherapist || existingPatient) {
       // If we found existing patient / therapist as email should be unique for every role
       return res
