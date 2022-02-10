@@ -49,7 +49,8 @@
     const { query } = req.body;
     const existingQuestions = await ExistingQuestions.find({
         title: {
-            "$regex": query
+            "$regex": query,
+            '$options': 'i'
         }
     });
     res.status(200).json({ success: true, data: existingQuestions ?? [] }); //success

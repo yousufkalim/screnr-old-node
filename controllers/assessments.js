@@ -7,6 +7,13 @@ const Therapists = require("../models/Therapists"); //Accessing Therapists
 const Assessments = require("../models/Assessments"); //Accessing Assessments
 const Questions = require("../models/Questions"); //Accessing Assessments
 
+const {
+  encryptQuestionObj,
+  encryptArr,
+  encrypt,
+  decryptQuestionObj
+} = require("../utils/encrypt");
+
 /**
  * Create Assessments
  * @param {object} req
@@ -72,6 +79,7 @@ const postQuestions = (req, assessment) => {
     req.body.questions_array.map(async (question, index) => {
       try {
         question.assessment = assessment._id;
+        question = encryptQuestionObj(question);
         let questionObj = await Questions.create(question); //at every index there's a new question so we will store each question
         test = await Assessments.findByIdAndUpdate(
           assessment.id,
@@ -125,7 +133,12 @@ exports.getAssessment = async (req, res) => {
       .populate("questions")
       .populate("patient")
       .populate("therapist"); //finding assessment from db
-    console.log("therapist", assessment.therapist.id);
+    const decryptedQuestions = [];
+    assessment.questions.forEach(e => {
+      const decryptedQuestion = decryptQuestionObj(e._doc);
+      decryptedQuestions.push(decryptedQuestion);
+    });
+    assessment._doc.questions = decryptedQuestions;
     if (
       user._id == assessment.therapist.id ||
       user._id == assessment.patient.id
@@ -208,10 +221,11 @@ exports.endAssessment = async (req, res) => {
       return new Promise((resolve, reject) => {
         try {
           req.body.answer.map(async (answer, index) => {
+            const encryptedValueArr = encryptArr(answer.value);
             test = await Questions.findByIdAndUpdate(
               answer.question_id,
               {
-                value: answer.value,
+                value: encryptedValueArr,
               },
               { new: true }
             );
@@ -249,10 +263,11 @@ exports.reviewAssessment = async (req, res) => {
       return new Promise((resolve, reject) => {
         try {
           req.body.feedbacks.map(async (feedback, index) => {
+            const encryptedFeedback = encrypt(feedback.feedback);
             test = await Questions.findByIdAndUpdate(
               feedback.question_id,
               {
-                feedback: feedback.feedback,
+                feedback: encryptedFeedback,
               },
               { new: true }
             );

@@ -204,8 +204,6 @@ exports.confirmAuth = async (req, res) => {
     // Getting email and password
     const userID = req.user._id;
 
-    console.log(`THIS IS THE userID: ${userID}`);
-
     // Getting users from db
     //As we have same login so checking all models :(
     const therapist = await Therapists.findOne({ _id: userID }); //chk if request by therapist
