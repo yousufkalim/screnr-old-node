@@ -11,7 +11,7 @@ const {
   encryptQuestionObj,
   encryptArr,
   encrypt,
-  decryptQuestionObj
+  decryptQuestionObj,
 } = require("../utils/encrypt");
 
 /**
@@ -33,10 +33,11 @@ exports.create = async (req, res) => {
     let patient = await Patients.findById(patientID); //To chk id os patient is valid or not
 
     if (therapist && patient) {
-      if(!patient._doc.doc_id.equals(therapist._doc._id)){
-        res
-        .status(400)
-        .json({ success: false, message: "You are not authorized to perform this action." });
+      if (!patient._doc.doc_id.equals(therapist._doc._id)) {
+        res.status(400).json({
+          success: false,
+          message: "You are not authorized to perform this action.",
+        });
       }
       let assessment = await Assessments.create(req.body); //create Assessment
       if (assessment) {
@@ -51,26 +52,27 @@ exports.create = async (req, res) => {
           { new: true } //Assign therapist id of assessment
         );
         let tests = await postQuestions(req, assessment);
-        if(tests){
+        if (tests) {
           return res.status(200).json({
             success: true,
             message: "Assessment Created",
             tests,
           }); //success
         } else {
-          res
-          .status(400)
-          .json({ success: false, message: "Something went wrong while parsing questions" }); //Failure Somehow
+          res.status(400).json({
+            success: false,
+            message: "Something went wrong while parsing questions",
+          }); //Failure Somehow
         }
       } else {
         res
-        .status(400)
-        .json({ success: false, message: "Unable to create Assessment" }); //Failure Somehow
+          .status(400)
+          .json({ success: false, message: "Unable to create Assessment" }); //Failure Somehow
       }
     } else {
       res
-      .status(400)
-      .json({ success: false, message: "Invalid Patient or therapist" }); //incase any of id is invalid
+        .status(400)
+        .json({ success: false, message: "Invalid Patient or therapist" }); //incase any of id is invalid
     }
   } catch (err) {
     // Error handling
@@ -105,7 +107,6 @@ const postQuestions = (req, assessment) => {
 //Get All Assessment of a user
 exports.getAll = async (req, res) => {
   try {
-
     let userId = req.params.userId;
 
     const patient = await Assessments.find({ patient: userId })
@@ -120,9 +121,9 @@ exports.getAll = async (req, res) => {
     } else if (therapist.length > 0) {
       //If request by Therapist
       res.status(200).json({ success: true, Assessment: therapist }); //If request by Therapist
-    } else
-      // If no assessments found.
-      res.status(200).json({ success: true, Assessment: [] });
+    }
+    // If no assessments found.
+    else res.status(200).json({ success: true, Assessment: [] });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -140,7 +141,7 @@ exports.getAssessment = async (req, res) => {
       .populate("patient")
       .populate("therapist"); //finding assessment from db
     const decryptedQuestions = [];
-    assessment.questions.forEach(e => {
+    assessment.questions.forEach((e) => {
       const decryptedQuestion = decryptQuestionObj(e._doc);
       decryptedQuestions.push(decryptedQuestion);
     });
@@ -164,10 +165,24 @@ exports.getAssessment = async (req, res) => {
 //update Assessment
 exports.updateAssessment = async (req, res) => {
   try {
+    let data = req.body;
+    if (req.body.broken_rules) {
+      if (req.body.broken_rules.length != 0) {
+        const brokenRules = req.body.broken_rules;
+        data["broken_rules"] = brokenRules;
+      }
+    }
+    if (req.body.final_reps) {
+      if (req.body.final_reps.length != 0) {
+        const finalReps = req.body.final_reps;
+        data["final_reps"] = finalReps;
+      }
+    }
+
     const assessmentId = req.params.assessmentId; //Getting id from param
     const assessment = await Assessments.findByIdAndUpdate(
       assessmentId,
-      req.body,
+      data,
       { new: true } //find Assessment and update it
     )
       .populate("questions")
