@@ -51,7 +51,10 @@ exports.create = async (req, res) => {
           { $push: { assessments: assessment._id } },
           { new: true } //Assign therapist id of assessment
         );
-        let tests = await postQuestions(req, assessment);
+        let tests = "";
+        if (req.body.questions_array.length != 0) {
+          tests = await postQuestions(req, assessment);
+        }
         if (tests) {
           return res.status(200).json({
             success: true,
@@ -59,10 +62,10 @@ exports.create = async (req, res) => {
             tests,
           }); //success
         } else {
-          res.status(400).json({
-            success: false,
-            message: "Something went wrong while parsing questions",
-          }); //Failure Somehow
+          res.status(200).json({
+            success: true,
+            message: "Motion capture request created",
+          });
         }
       } else {
         res
