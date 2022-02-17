@@ -282,29 +282,46 @@ exports.reviewAssessment = async (req, res) => {
   try {
     const assessmentId = req.params.assessmentId; //Getting AssessmentID from Params
     var assessment = await Assessments.findById(assessmentId); //find Assessment by its id
-    const PostAnswers = () => {
-      const lastIndex = req.body.feedbacks.length - 1;
-      return new Promise((resolve, reject) => {
-        try {
-          req.body.feedbacks.map(async (feedback, index) => {
-            const encryptedFeedback = encrypt(feedback.feedback);
-            test = await Questions.findByIdAndUpdate(
-              feedback.question_id,
-              {
-                feedback: encryptedFeedback,
-              },
-              { new: true }
-            );
-            if (lastIndex === index) {
-              resolve(test);
-            }
-          });
-        } catch (err) {
-          reject(err);
-        }
+
+    if (req.body.feedbacks) {
+      const PostAnswers = () => {
+        const lastIndex = req.body.feedbacks.length - 1;
+        return new Promise((resolve, reject) => {
+          try {
+            req.body.feedbacks.map(async (feedback, index) => {
+              const encryptedFeedback = encrypt(feedback.feedback);
+              test = await Questions.findByIdAndUpdate(
+                feedback.question_id,
+                {
+                  feedback: encryptedFeedback,
+                },
+                { new: true }
+              );
+              if (lastIndex === index) {
+                resolve(test);
+              }
+            });
+          } catch (err) {
+            reject(err);
+          }
+        });
+      };
+      PostAnswers().then(async (tests) => {
+        assessment = await Assessments.findByIdAndUpdate(
+          assessmentId,
+          req.body,
+          {
+            new: true,
+          }
+        ).populate("questions"); //update Assessment
+        return res.status(200).json({
+          success: true,
+          message: "Assessment reviewed",
+          Assessments: assessment,
+        }); //success
       });
-    };
-    PostAnswers().then(async (tests) => {
+    } else {
+      delete req.body.feedbacks;
       assessment = await Assessments.findByIdAndUpdate(assessmentId, req.body, {
         new: true,
       }).populate("questions"); //update Assessment
@@ -313,7 +330,7 @@ exports.reviewAssessment = async (req, res) => {
         message: "Assessment reviewed",
         Assessments: assessment,
       }); //success
-    });
+    }
   } catch (err) {
     console.log("Error ----> ", err.message); //server error
     res.status(500).json({ success: false, message: "Internal server error" }); //internal server error
