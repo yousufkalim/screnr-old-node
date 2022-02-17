@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index",
     "start:dev": "nodemon index",
-    "deploy": "sudo chmod 644 .git/index && git pull origin main && npm install && sudo pm2 restart 15 && sudo pm2 logs 15"
+    "deploy": "sudo chmod 644 .git/index && git pull origin main && npm install && sudo pm2 restart 15 && sudo pm2 logs 15",
+    "prod": "git pull origin main && npm install && pm2 restart 7 && pm2 logs 7"
   },
   "repository": {
     "type": "git",
