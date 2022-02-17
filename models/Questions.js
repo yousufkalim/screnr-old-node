@@ -13,7 +13,7 @@ const QuestionsSchema = new mongoose.Schema(
       enum: ["text", "mcqs", "checkboxes"],
     }, //type of the question asked
     answers: [String], //store the content of answers if its multiple type
-    value: String, //answer to question in text
+    value: [String], //answers to question in text
     feedback: String, //feedback given by on doctor to the each answer
     screenshots: [String], //screenshots  of exercise
     assessment: {

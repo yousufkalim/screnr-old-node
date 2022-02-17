@@ -20,10 +20,7 @@ exports.checkAuth = (req, res, next) => {
     // Decrypting token
 
     const token = header.split(" ")[1];
-    console.log("token is", token);
-    console.log("ttokenSecretoken is", tokenSecret);
     const decoded = jwt.verify(token, tokenSecret);
-    console.log("decoded is", decoded.user);
     req.user = decoded.user;
     if (decoded.patient) {
       req.user = decoded.patient;

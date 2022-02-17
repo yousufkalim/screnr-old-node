@@ -34,14 +34,12 @@ exports.validatePatients = [
   check("first_name", "First Name is required.").notEmpty().trim(),
   check("last_name", "Last Name is required.").notEmpty().trim(),
   check("middle_name", "Middle Name is required.").notEmpty().trim(),
-  check("national_id", "national_id is required.").notEmpty().trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
   check("problem_name", "problem_name is required.").notEmpty().trim(),
   check("problem_description", "problem_description is required.")
     .notEmpty()
     .trim(),
   check("email", "Email is required.").notEmpty().isEmail().trim(),
-  check("gender", "Gender is required.").notEmpty(),
   check("dob", "date of birth is required").notEmpty().trim(),
   check("phone", "Phone is required.").notEmpty().isNumeric().trim(),
 ];
@@ -75,14 +73,18 @@ exports.ValidateAssessmentRequest = [
   check("sets", "Sets are required").notEmpty().trim(),
   check("reps", "Reps are required").notEmpty().trim(),
   check("due_date", "due_date is required").notEmpty().trim(),
-  check("questions_array.*.title", "Question title is required.").notEmpty().trim(),
-  check("questions_array.*.type", "Question type is required.").notEmpty().trim(),
 ];
 //validate Question
 exports.validateQuestion = [
-  check("questions_array.*.title", "Question title is required.").notEmpty().trim(),
-  check("questions_array.*.type", "Question type is required.").notEmpty().trim(),
-  check("questions_array.*.assessment", "AssessmentID is required").notEmpty().trim(),
+  check("questions_array.*.title", "Question title is required.")
+    .notEmpty()
+    .trim(),
+  check("questions_array.*.type", "Question type is required.")
+    .notEmpty()
+    .trim(),
+  check("questions_array.*.assessment", "AssessmentID is required")
+    .notEmpty()
+    .trim(),
 ];
 //Validate Answer
 exports.validateAnswer = [
@@ -95,6 +97,13 @@ exports.validateFeedback = [
     .notEmpty()
     .trim(),
   check("feedbacks.*.feedback", "Feedback is   is required.").notEmpty().trim(),
+];
+//validate ExistingQuestions
+exports.ValidateExistingQuestionsRead = [
+  check("query", "Query is required.").notEmpty().trim(),
+];
+exports.ValidateExistingQuestionsInsert = [
+  check("text", "Text is required.").notEmpty().trim(),
 ];
 /*
 ======================

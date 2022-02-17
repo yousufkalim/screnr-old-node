@@ -7,6 +7,13 @@ const Therapists = require("../models/Therapists"); //Accessing Therapists
 const Assessments = require("../models/Assessments"); //Accessing Assessments
 const Questions = require("../models/Questions"); //Accessing Assessments
 
+const {
+  encryptQuestionObj,
+  encryptArr,
+  encrypt,
+  decryptQuestionObj,
+} = require("../utils/encrypt");
+
 /**
  * Create Assessments
  * @param {object} req
@@ -24,7 +31,14 @@ exports.create = async (req, res) => {
 
     let therapist = await Therapists.findById(therapistID); //To chk id os therapist is valid or not
     let patient = await Patients.findById(patientID); //To chk id os patient is valid or not
+
     if (therapist && patient) {
+      if (!patient._doc.doc_id.equals(therapist._doc._id)) {
+        res.status(400).json({
+          success: false,
+          message: "You are not authorized to perform this action.",
+        });
+      }
       let assessment = await Assessments.create(req.body); //create Assessment
       if (assessment) {
         therapist = await Therapists.findByIdAndUpdate(
@@ -37,27 +51,31 @@ exports.create = async (req, res) => {
           { $push: { assessments: assessment._id } },
           { new: true } //Assign therapist id of assessment
         );
-        let tests = await postQuestions(req, assessment);
-        if(tests){
+        let tests = "";
+        if (req.body.questions_array.length != 0) {
+          tests = await postQuestions(req, assessment);
+        }
+        if (tests) {
           return res.status(200).json({
             success: true,
             message: "Assessment Created",
             tests,
           }); //success
         } else {
-          res
-          .status(400)
-          .json({ success: false, message: "Something went wrong while parsing questions" }); //Failure Somehow
+          res.status(200).json({
+            success: true,
+            message: "Motion capture request created",
+          });
         }
       } else {
         res
-        .status(400)
-        .json({ success: false, message: "Unable to create Assessment" }); //Failure Somehow
+          .status(400)
+          .json({ success: false, message: "Unable to create Assessment" }); //Failure Somehow
       }
     } else {
       res
-      .status(400)
-      .json({ success: false, message: "Invalid Patient or therapist" }); //incase any of id is invalid
+        .status(400)
+        .json({ success: false, message: "Invalid Patient or therapist" }); //incase any of id is invalid
     }
   } catch (err) {
     // Error handling
@@ -72,6 +90,7 @@ const postQuestions = (req, assessment) => {
     req.body.questions_array.map(async (question, index) => {
       try {
         question.assessment = assessment._id;
+        question = encryptQuestionObj(question);
         let questionObj = await Questions.create(question); //at every index there's a new question so we will store each question
         test = await Assessments.findByIdAndUpdate(
           assessment.id,
@@ -91,7 +110,6 @@ const postQuestions = (req, assessment) => {
 //Get All Assessment of a user
 exports.getAll = async (req, res) => {
   try {
-
     let userId = req.params.userId;
 
     const patient = await Assessments.find({ patient: userId })
@@ -106,10 +124,9 @@ exports.getAll = async (req, res) => {
     } else if (therapist.length > 0) {
       //If request by Therapist
       res.status(200).json({ success: true, Assessment: therapist }); //If request by Therapist
-    } else
-      res
-        .status(400)
-        .json({ success: false, message: "Invalid Patient or therapist" }); //incase any of id is invalid
+    }
+    // If no assessments found.
+    else res.status(200).json({ success: true, Assessment: [] });
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err.message);
@@ -126,7 +143,12 @@ exports.getAssessment = async (req, res) => {
       .populate("questions")
       .populate("patient")
       .populate("therapist"); //finding assessment from db
-    console.log("therapist", assessment.therapist.id);
+    const decryptedQuestions = [];
+    assessment.questions.forEach((e) => {
+      const decryptedQuestion = decryptQuestionObj(e._doc);
+      decryptedQuestions.push(decryptedQuestion);
+    });
+    assessment._doc.questions = decryptedQuestions;
     if (
       user._id == assessment.therapist.id ||
       user._id == assessment.patient.id
@@ -146,10 +168,24 @@ exports.getAssessment = async (req, res) => {
 //update Assessment
 exports.updateAssessment = async (req, res) => {
   try {
+    let data = req.body;
+    if (req.body.broken_rules) {
+      if (req.body.broken_rules.length != 0) {
+        const brokenRules = req.body.broken_rules;
+        data["broken_rules"] = brokenRules;
+      }
+    }
+    if (req.body.final_reps) {
+      if (req.body.final_reps.length != 0) {
+        const finalReps = req.body.final_reps;
+        data["final_reps"] = finalReps;
+      }
+    }
+
     const assessmentId = req.params.assessmentId; //Getting id from param
     const assessment = await Assessments.findByIdAndUpdate(
       assessmentId,
-      req.body,
+      data,
       { new: true } //find Assessment and update it
     )
       .populate("questions")
@@ -209,10 +245,11 @@ exports.endAssessment = async (req, res) => {
       return new Promise((resolve, reject) => {
         try {
           req.body.answer.map(async (answer, index) => {
+            const encryptedValueArr = encryptArr(answer.value);
             test = await Questions.findByIdAndUpdate(
               answer.question_id,
               {
-                value: answer.value,
+                value: encryptedValueArr,
               },
               { new: true }
             );
@@ -232,6 +269,48 @@ exports.endAssessment = async (req, res) => {
       return res.status(200).json({
         success: true,
         message: "Assessment ended",
+        Assessments: assessment,
+      }); //success
+    });
+  } catch (err) {
+    console.log("Error ----> ", err.message); //server error
+    res.status(500).json({ success: false, message: "Internal server error" }); //internal server error
+  }
+};
+//reviewAssessment
+exports.reviewAssessment = async (req, res) => {
+  try {
+    const assessmentId = req.params.assessmentId; //Getting AssessmentID from Params
+    var assessment = await Assessments.findById(assessmentId); //find Assessment by its id
+    const PostAnswers = () => {
+      const lastIndex = req.body.feedbacks.length - 1;
+      return new Promise((resolve, reject) => {
+        try {
+          req.body.feedbacks.map(async (feedback, index) => {
+            const encryptedFeedback = encrypt(feedback.feedback);
+            test = await Questions.findByIdAndUpdate(
+              feedback.question_id,
+              {
+                feedback: encryptedFeedback,
+              },
+              { new: true }
+            );
+            if (lastIndex === index) {
+              resolve(test);
+            }
+          });
+        } catch (err) {
+          reject(err);
+        }
+      });
+    };
+    PostAnswers().then(async (tests) => {
+      assessment = await Assessments.findByIdAndUpdate(assessmentId, req.body, {
+        new: true,
+      }).populate("questions"); //update Assessment
+      return res.status(200).json({
+        success: true,
+        message: "Assessment reviewed",
         Assessments: assessment,
       }); //success
     });

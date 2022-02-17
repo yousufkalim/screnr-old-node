@@ -19,6 +19,7 @@ const { checkAuth, checkTherapist } = require("../middleware/checkAuth"); //Midd
 // Create - Patients Signup
 router.post(
   "/",
+  checkAuth,
   upload.single("image"), //This will check if avatar is coming from body and store to a specific folder
   validatePatients, //Validate all the data coming from body
   isValidated, //if data is validated
@@ -26,9 +27,9 @@ router.post(
 );
 // Read
 router.get("/", checkAuth, checkTherapist, patients.getAll); // Get all Patient at once
-router.get("/:patientId", patients.getById); // Get one Patient by it's id
+router.get("/:patientId", checkAuth, patients.getById); // Get one Patient by it's id
 // Update
-router.put("/:patientId", upload.single("image"), patients.update); // Update a specific Patient by it's id
+router.put("/:patientId", checkAuth, upload.single("image"), patients.update); // Update a specific Patient by it's id
 // Delete
 router.delete("/:patientId", patients.delete); // delete a specific user by it's id
 

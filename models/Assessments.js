@@ -35,6 +35,9 @@ const AssessmentsSchema = new mongoose.Schema(
     time_start: Date, //time when assessment started
     time_spent: String, //total time taken by patient to complete assessment
     note: String, //note  from Therapist after reviewing exercise
+    broken_rules: [Object],
+    final_reps: [Object],
+
     questions:
       //This will store ids of all the questions taken by a Therapist
       [

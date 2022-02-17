@@ -34,4 +34,5 @@ router.get("/:userId", assessments.getAll); //get All Assessments of a patient/T
 router.put("/update/:assessmentId", assessments.updateAssessment); //update Assessment
 router.put("/startassessment/:assessmentId", assessments.startAssessment); //start assessment
 router.put("/endassessment/:assessmentId", assessments.endAssessment); //end assessment
+router.put("/reviewassessment/:assessmentId", assessments.reviewAssessment); //review assessment
 module.exports = router;

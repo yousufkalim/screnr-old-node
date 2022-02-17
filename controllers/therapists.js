@@ -27,6 +27,7 @@ exports.create = async (req, res) => {
     }
     const existingTherapist = await Therapists.findOne({ email }); // Finding already existing Therapist
     const existingPatient = await Patients.findOne({ email }); // Finding already existing Patients
+
     if (existingTherapist || existingPatient) {
       // If we found existing patient / therapist as email should be unique for every role
       return res
@@ -55,7 +56,7 @@ exports.create = async (req, res) => {
         // var check_in=+therapist.check_ins + +increment
         therapist.check_ins = therapist.check_ins + increment;
         await therapist.save();
-        return res.json({ success: true, "data": {...therapist._doc}, token });
+        return res.json({ success: true, data: { ...therapist._doc }, token });
       }
     );
   } catch (err) {
@@ -75,6 +76,7 @@ exports.getAll = async (req, res) => {
     const patient = await Patients.findById(userID);
     const docID = patient._doc.doc_id;
     const users = await Therapists.find({ _id: docID }).populate("assessments"); // Finding all the therapists from db
+    const users = await Therapists.find().populate("assessments"); // Finding all the therapists from db
     if (users.length > 0) return res.json({ success: true, Therapists: users });
     // Success
     else res.json({ success: true, message: "No therapist foud" });
@@ -110,7 +112,7 @@ exports.getById = async (req, res) => {
  */
 exports.update = async (req, res) => {
   try {
-    const userId = req.params.userId; // Getting user id from URL parameter
+    const userId = req.user._id;
     if (req.file) {
       req.body.avatar = req.file.path; // Creating a new property called photo in body object
     }

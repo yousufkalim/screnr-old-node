@@ -27,7 +27,7 @@ router.post(
 router.get("/", checkAuth, checkPatient, therapists.getAll); // Get all Therapists at once
 router.get("/:therapistId", therapists.getById); // Get one Therapist by it's id
 // Update
-router.put("/:therapistId", upload.single("image"), therapists.update); // Update a specific Therapist by it's id
+router.put("/", checkAuth, upload.single("image"), therapists.update); // Update a specific Therapist by it's id
 // Delete
 router.delete("/:therapistId", therapists.delete); // delete a Therapist user by it's id
 // Export
