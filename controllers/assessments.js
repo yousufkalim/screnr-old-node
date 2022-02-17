@@ -283,7 +283,7 @@ exports.reviewAssessment = async (req, res) => {
     const assessmentId = req.params.assessmentId; //Getting AssessmentID from Params
     var assessment = await Assessments.findById(assessmentId); //find Assessment by its id
 
-    if (req.body.feedbacks) {
+    if (req.body.feedbacks.length > 0) {
       const PostAnswers = () => {
         const lastIndex = req.body.feedbacks.length - 1;
         return new Promise((resolve, reject) => {
