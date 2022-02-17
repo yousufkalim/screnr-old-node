@@ -73,14 +73,18 @@ exports.ValidateAssessmentRequest = [
   check("sets", "Sets are required").notEmpty().trim(),
   check("reps", "Reps are required").notEmpty().trim(),
   check("due_date", "due_date is required").notEmpty().trim(),
-  check("questions_array.*.title", "Question title is required.").notEmpty().trim(),
-  check("questions_array.*.type", "Question type is required.").notEmpty().trim(),
 ];
 //validate Question
 exports.validateQuestion = [
-  check("questions_array.*.title", "Question title is required.").notEmpty().trim(),
-  check("questions_array.*.type", "Question type is required.").notEmpty().trim(),
-  check("questions_array.*.assessment", "AssessmentID is required").notEmpty().trim(),
+  check("questions_array.*.title", "Question title is required.")
+    .notEmpty()
+    .trim(),
+  check("questions_array.*.type", "Question type is required.")
+    .notEmpty()
+    .trim(),
+  check("questions_array.*.assessment", "AssessmentID is required")
+    .notEmpty()
+    .trim(),
 ];
 //Validate Answer
 exports.validateAnswer = [
