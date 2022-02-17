@@ -48,7 +48,11 @@ exports.login = async (req, res) => {
           // var check_in=+therapist.check_ins + +increment
           therapist.check_ins = therapist.check_ins + increment;
           await therapist.save();
-          return res.json({ success: true, "data": {...therapist._doc}, token });
+          return res.json({
+            success: true,
+            data: { ...therapist._doc },
+            token,
+          });
         }
       );
     } else if (patient != null) {
@@ -70,10 +74,12 @@ exports.login = async (req, res) => {
         async (err, token) => {
           if (err) throw err;
           // done
-          const increment=1;
+          const increment = 1;
           patient.check_ins = patient.check_ins + increment;
           await patient.save();
-          return res.status(200).json({ success: true, "data": {...patient._doc}, token }); //return patient with token
+          return res
+            .status(200)
+            .json({ success: true, data: { ...patient._doc }, token }); //return patient with token
         }
       );
     } else {
@@ -211,13 +217,13 @@ exports.confirmAuth = async (req, res) => {
 
     if (therapist != null) {
       // if requested by Therapist
-      return res.json({ success: true, "user": therapist });
+      return res.json({ success: true, user: therapist });
     } else if (patient != null) {
       // if requested by Patient
-      return res.json({ success: true, "user": patient });
+      return res.json({ success: true, user: patient });
     } else {
       // If email is not valid
-      res.status(500).json({ success: false, message: "Invalid User" }); //email not found
+      res.status(403).json({ success: false, message: "Invalid User" }); //email not found
     }
   } catch (err) {
     // Error handling
