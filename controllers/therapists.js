@@ -74,7 +74,7 @@ exports.getAll = async (req, res) => {
   try {
     const userID = req.user._id;
     const patient = await Patients.findById(userID).populate("doc_id");
-    const users = patient._doc.doc_id;
+    const users = [patient.doc_id];
 
     if (users) return res.json({ success: true, Therapists: users });
     // Success
