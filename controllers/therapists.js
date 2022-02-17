@@ -73,11 +73,10 @@ exports.create = async (req, res) => {
 exports.getAll = async (req, res) => {
   try {
     const userID = req.user._id;
-    const patient = await Patients.findById(userID);
-    const docID = patient._doc.doc_id;
-    const users = await Therapists.find({ _id: docID }).populate("assessments"); // Finding all the therapists from db
-    const users = await Therapists.find().populate("assessments"); // Finding all the therapists from db
-    if (users.length > 0) return res.json({ success: true, Therapists: users });
+    const patient = await Patients.findById(userID).populate("doc_id");
+    const users = patient._doc.doc_id;
+
+    if (users) return res.json({ success: true, Therapists: users });
     // Success
     else res.json({ success: true, message: "No therapist foud" });
   } catch (err) {
