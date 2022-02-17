@@ -56,7 +56,7 @@ exports.create = async (req, res) => {
         // var check_in=+therapist.check_ins + +increment
         therapist.check_ins = therapist.check_ins + increment;
         await therapist.save();
-        return res.json({ success: true, "data": {...therapist._doc}, token });
+        return res.json({ success: true, data: { ...therapist._doc }, token });
       }
     );
   } catch (err) {
@@ -73,7 +73,7 @@ exports.create = async (req, res) => {
 exports.getAll = async (req, res) => {
   try {
     const users = await Therapists.find().populate("assessments"); // Finding all the therapists from db
-    if (users.length > 0) return res.json({ success: true, Therapist: users });
+    if (users.length > 0) return res.json({ success: true, Therapists: users });
     // Success
     else res.json({ success: true, message: "No therapist foud" });
   } catch (err) {
