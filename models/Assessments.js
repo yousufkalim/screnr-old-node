@@ -33,6 +33,7 @@ const AssessmentsSchema = new mongoose.Schema(
     due_date: Date, //deadline to submit assessment
     submission_date: Date, //date of assessment submission
     time_start: Date, //time when assessment started
+    time_end: Date, //time when assessment ended
     time_spent: String, //total time taken by patient to complete assessment
     note: String, //note  from Therapist after reviewing exercise
     broken_rules: [Object],

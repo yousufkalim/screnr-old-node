@@ -2,6 +2,7 @@
  * Assessments  controllers
  * @codeBy Shuja Naqvi
  */
+const moment = require("moment");
 const Patients = require("../models/Patients"); //Accessing Patients
 const Therapists = require("../models/Therapists"); //Accessing Therapists
 const Assessments = require("../models/Assessments"); //Accessing Assessments
@@ -169,6 +170,8 @@ exports.getAssessment = async (req, res) => {
 exports.updateAssessment = async (req, res) => {
   try {
     let data = req.body;
+    let time_start = req.body.time_start;
+    let time_end = req.body.time_end;
     if (req.body.broken_rules) {
       if (req.body.broken_rules.length != 0) {
         const brokenRules = req.body.broken_rules;
@@ -181,6 +184,13 @@ exports.updateAssessment = async (req, res) => {
         data["final_reps"] = finalReps;
       }
     }
+
+    let hours = moment(time_end).diff(time_start, "hours");
+    let mins = moment(time_end).diff(time_start, "minutes");
+    let sec = moment(time_end).diff(time_start, "seconds");
+
+    let timeSpent = (hours % 24) + "h:" + (mins % 60) + "m:" + (sec % 60) + "s";
+    data["time_spent"] = timeSpent;
 
     const assessmentId = req.params.assessmentId; //Getting id from param
     const assessment = await Assessments.findByIdAndUpdate(
