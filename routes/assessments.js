@@ -30,7 +30,7 @@ router.get(
   checkAuth,
   assessments.getAssessment
 ); //get an assessment
-router.get("/:userId", assessments.getAll); //get All Assessments of a patient/Therapist
+router.get("/:userId", checkAuth, assessments.getAll); //get All Assessments of a patient/Therapist
 router.put("/update/:assessmentId", assessments.updateAssessment); //update Assessment
 router.put("/startassessment/:assessmentId", assessments.startAssessment); //start assessment
 router.put("/endassessment/:assessmentId", assessments.endAssessment); //end assessment
