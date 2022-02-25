@@ -33,7 +33,7 @@ exports.create = async (req, res) => {
     req.body.password = bcrypt.hashSync(password, parseInt(bcryptSalt)); // Hashing the password with salt 8
     const user = await Patients.create({
       ...req.body,
-      doc_id: therapistID
+      doc_id: therapistID,
     }); // Adding patient in db
     // Done
     res.json({ success: true, user }); //Success
@@ -51,10 +51,12 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
   try {
-
     const therapistID = req.user._id; // will be returned by the checkAuth middleware
 
-    const users = await Patients.find({ doc_id: therapistID }).populate("assessments"); // Finding all the users from db
+    const users = await Patients.find({ doc_id: therapistID }).populate(
+      "assessments",
+      "-broken_rules"
+    ); // Finding all the users from db
 
     return res.status(200).json({ success: true, data: users });
   } catch (err) {
@@ -74,26 +76,32 @@ exports.getById = async (req, res) => {
     const userID = req.user._id;
 
     const therapistUser = await Therapists.findOne({
-      _id: userID
+      _id: userID,
     });
 
     const patientUser = await Patients.findOne({
-      _id: userID
+      _id: userID,
     });
-
+    console.log("hello");
     const patientId = req.params.patientId; // Getting user id from URL parameter
-    const patient = await Patients.findById(patientId).populate("assessments"); // Finding user by id
+    const patient = await Patients.findById(patientId).populate(
+      "assessments",
+      "-broken_rules"
+    ); // Finding user by id
 
     if (patient) {
-      if(patientUser){
+      if (patientUser) {
         // do nothing
-      } else if(!patient._doc.doc_id.equals(therapistUser._doc._id)){
-        return res.status(400).json({ success: false, message: "You are not authorized to perform this action." });
+      } else if (!patient._doc.doc_id.equals(therapistUser._doc._id)) {
+        return res.status(400).json({
+          success: false,
+          message: "You are not authorized to perform this action.",
+        });
       }
       return res.status(200).json({ success: true, patient });
     } else {
       res.status(400).json({ success: false, message: "Invalid ID" });
-    } 
+    }
   } catch (err) {
     // Error handling
     console.log("Error ----> ", err);
