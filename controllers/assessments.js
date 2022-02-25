@@ -113,12 +113,19 @@ exports.getAll = async (req, res) => {
   try {
     let userId = req.params.userId;
 
-    const patient = await Assessments.find({ patient: userId })
+    const patient = await Assessments.find(
+      { patient: userId },
+      { broken_rules: 0 }
+    )
       .populate("questions")
       .populate("therapist"); //To check wether request by therapist
-    const therapist = await Assessments.find({ therapist: userId })
+    const therapist = await Assessments.find(
+      { therapist: userId },
+      { broken_rules: 0 }
+    )
       .populate("questions")
       .populate("patient"); //To check wether request by patient
+
     if (patient.length > 0) {
       //If request by patient
       res.status(200).json({ success: true, Assessment: patient }); //success
@@ -235,7 +242,9 @@ exports.startAssessment = async (req, res) => {
 exports.endAssessment = async (req, res) => {
   try {
     const assessmentId = req.params.assessmentId; //Getting AssessmentID from Params
-    var assessment = await Assessments.findById(assessmentId); //find Assessment by its id
+    var assessment = await Assessments.findById(assessmentId, {
+      broken_rules: 0,
+    }); //find Assessment by its id
     var time = new Date(); //find  Date today
     var test;
     var time_spent = time - assessment.time_start; //calculate time spent on exercise
@@ -291,7 +300,9 @@ exports.endAssessment = async (req, res) => {
 exports.reviewAssessment = async (req, res) => {
   try {
     const assessmentId = req.params.assessmentId; //Getting AssessmentID from Params
-    var assessment = await Assessments.findById(assessmentId); //find Assessment by its id
+    var assessment = await Assessments.findById(assessmentId, {
+      broken_rules: 0,
+    }); //find Assessment by its id
 
     if (req.body.feedbacks.length > 0) {
       const PostAnswers = () => {
