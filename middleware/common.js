@@ -9,7 +9,7 @@ const cors = require("cors");
 // Common Middleware
 module.exports = (app) => {
   app.use(cors({ origin: true })); // CORS (Cross Origin Policy) to restrict unknown requests
-  // app.use(logger("dev")); // Morgan - to log every request in console
+  app.use(logger("dev")); // Morgan - to log every request in console
   app.use(express.urlencoded({ limit: "50mb", extended: true })); // to get url encoded data from requests
   app.use(express.json({ limit: "50mb" })); // to send json data in response (It's mandatory in rest api's)
   app.use("/uploads", express.static("uploads", { maxAge: "31536000" })); // Static path to serve uploaded images with cache policy
